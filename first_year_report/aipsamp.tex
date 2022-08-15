@@ -49,10 +49,11 @@ Note that numbered references are allowed in the lead paragraph.
 The lead paragraph will only be found in an article being prepared for the journal \textit{Chaos}.
 \end{quotation}
 
-\section{\label{sec:level1}Introduction}
+
+\section{Introduction}
 
 
-%\subsection{\label{sec:level2}Relay catalysis}
+\subsection{Relay catalysis}
 
 The traditional catalytic model refers to one catalyst catalysing one reaction, through step by step synthesis to obtain the target product
  in a linear fashion.Mordern organic synthesis advocates more atomic economy and economy of steps.Relay catalysis can combine multiple 
@@ -64,18 +65,18 @@ The traditional catalytic model refers to one catalyst catalysing one reaction, 
  such as synthesis path design and selection, reaction classification and reaction result prediction, which can be automated or 
  semi-automated to reduce human labour.
 
-%\subsection{\label{sec:level2}Reaction database}
+\subsection{Reaction database}
 To this end, we investigated existing reaction databases and found that they all focused on the storage of organic reactions and were mostly manually constructed and not easily accessible for commercial or other reasons.
 In addition to this, Pistachio and the USPTO dataset are derived from proprietary data and do not have real-time effects, while Scifinder and Reaxys store reaction information in an unstructured manner, besides the above databases all store reactions in a relational database which does not have inference capabilities.
 Therefore, the construction of a database of relay-catalyzed reactions became necessary.
 
-%\subsection{\label{sec:level2}Knowledge graph}
+\subsection{Knowledge graph}
 
 In recent years, with the development of artificial intelligence, the knowledge graph has gradually attracted our attention.
 It is a multivariate relational graph where nodes represent entities and edges represent relationships between entities. In a knowledge graph, a triple is used to represent a fact such as Einstein was born in the German Empire in a subject-verb-object structure, and then these triples are associated in the form of a graph to form the structure of the graph. In recent years it has also been used in materials science to assist in materials design, so we have chosen the knowledge graph as the underlying data structure for the Relay Catalysis database and hope to build a knowledge base of reactions in conjunction with Relay Catalysis.
 
 
-%\subsection{\label{sec:level2}Summary}
+\subsection{Summary}
 
 \section{Related work}
 
@@ -143,49 +144,6 @@ We wish to acknowledge the support of the author community in using
 REV\TeX{}, offering suggestions and encouragement, testing new versions,
 \dots.
 \end{acknowledgments}
-
-\appendix
-
-\section{Appendixes}
-
-To start the appendixes, use the \verb+\appendix+ command.
-This signals that all following section commands refer to appendixes
-instead of regular sections. Therefore, the \verb+\appendix+ command
-should be used only once---to set up the section commands to act as
-appendixes. Thereafter normal section commands are used. The heading
-for a section can be left empty. For example,
-\begin{verbatim}
-\appendix
-\section{}
-\end{verbatim}
-will produce an appendix heading that says ``APPENDIX A'' and
-\begin{verbatim}
-\appendix
-\section{Background}
-\end{verbatim}
-will produce an appendix heading that says ``APPENDIX A: BACKGROUND''
-(note that the colon is set automatically).
-
-If there is only one appendix, then the letter ``A'' should not
-appear. This is suppressed by using the star version of the appendix
-command (\verb+\appendix*+ in the place of \verb+\appendix+).
-
-\section{A little more on appendixes}
-
-Observe that this appendix was started by using
-\begin{verbatim}
-\section{A little more on appendixes}
-\end{verbatim}
-
-Note the equation number in an appendix:
-\begin{equation}
-E=mc^2.
-\end{equation}
-
-\subsection{\label{app:subsec}A subsection in an appendix}
-
-You can use a subsection or subsubsection in an appendix. Note the
-numbering: we are now in Appendix~\ref{app:subsec}.
 
 \nocite{*}
 \bibliography{aipsamp}% Produces the bibliography via BibTeX.
