@@ -52,32 +52,91 @@ The lead paragraph will only be found in an article being prepared for the journ
 \section{\label{sec:level1}Introduction}
 
 
-\subsection{\label{sec:level2}Relay catalysis}
+%\subsection{\label{sec:level2}Relay catalysis}
 
-\subsection{\label{sec:level2}Reaction database}
+The traditional catalytic model refers to one catalyst catalysing one reaction, through step by step synthesis to obtain the target product
+ in a linear fashion.Mordern organic synthesis advocates more atomic economy and economy of steps.Relay catalysis can combine multiple 
+ catalysts to achieve a one-pot tandem reaction,which is more in line with green chemistry guidelines and modern organic synthesis 
+ requirements; it is an important method for the preparation of key chemical raw materials such as ethanol and formaldehyde.However, the 
+ current implementation of relay catalysis, such as the screening of synthesis pathways from syngas to ethanol, remains in the traditional 
+ paradigm of a time-consuming and labour-intensive manual search for reactions based on experience and extensive literature reading.Therefore, 
+ we would like to have a reaction database, storing a large amount of reaction information, which can support us to implement functions 
+ such as synthesis path design and selection, reaction classification and reaction result prediction, which can be automated or 
+ semi-automated to reduce human labour.
 
-\subsection{\label{sec:level2}Knowledge graph}
+%\subsection{\label{sec:level2}Reaction database}
+To this end, we investigated existing reaction databases and found that they all focused on the storage of organic reactions and were mostly manually constructed and not easily accessible for commercial or other reasons.
+In addition to this, Pistachio and the USPTO dataset are derived from proprietary data and do not have real-time effects, while Scifinder and Reaxys store reaction information in an unstructured manner, besides the above databases all store reactions in a relational database which does not have inference capabilities.
+Therefore, the construction of a database of relay-catalyzed reactions became necessary.
+
+%\subsection{\label{sec:level2}Knowledge graph}
+
+In recent years, with the development of artificial intelligence, the knowledge graph has gradually attracted our attention.
+It is a multivariate relational graph where nodes represent entities and edges represent relationships between entities. In a knowledge graph, a triple is used to represent a fact such as Einstein was born in the German Empire in a subject-verb-object structure, and then these triples are associated in the form of a graph to form the structure of the graph. In recent years it has also been used in materials science to assist in materials design, so we have chosen the knowledge graph as the underlying data structure for the Relay Catalysis database and hope to build a knowledge base of reactions in conjunction with Relay Catalysis.
 
 
+%\subsection{\label{sec:level2}Summary}
 
 \section{Related work}
 
 \subsection{Reaction extraction}
+Daniel Lowe published his PhD thesis at the University of Cambridge in 2012, crawling patent data as an extraction source and using 
+machine learning and rule-based methods to extract reaction information into a representation containing atomic position information, 
+but this approach has two shortcomings, one being that the patent data does not provide a good picture of trends in the field of chemical 
+synthesis, and the rule-based extraction of reactions makes the information less accurate and less likely to be recalled.
+
+To solve these two problems Regina Barzelay's team at the MIT Computer Science and Artificial Intelligence Laboratory published a work 
+in 2021 that structured the reaction information into eight fields such as product, reaction type, reactant, solvent, etc. Using a 
+natural language processing approach, the reaction information extraction process was divided into two parts, entity identification tasks
+with reaction products as a central element and other elements that will be related to the product and do the relationship extraction task.
+Implementing the conversion of a piece of text into a structured response message.
+
 
 \subsection{Atom-Atom mapping}
+After the information on the reaction has been correctly extracted, in order to be able to check the correctness of the reaction.It is necessary
+to know how atoms are converted during a reaction, a process we call atomic mapping.To automate this process, IBM's European Research Institute 
+Philip's team co-sourced the atomic mapping tool called RXNMapper in 2021.Supports the conversion of Smiles representation into Smiles 
+representation with corresponding atomic positions, and atomic mapping for different types of reactions, with a combined mapping accuracy 
+of 99.4%.
 
 \subsection{Ontology construction}
+Ontologies are used to define concepts in a particular domain and the relationships between concepts. They serve two purposes: to constrain 
+the data and to facilitate knowledge graph queries.Since the various compounds in chemistry are more clearly defined and related to each other.
+Ontologies can be built in a top-down seven-step process, which is simply divided into reusing existing ontologies and building custom 
+ontologies using build tools.
 
+ChEbi is a database of compounds published in 2007 by the Institute of Bioinformatics-Kirill team at the University of Cambridge that 
+describes small molecule compounds in biochemistry using standard bioinformatics terminology, providing compound names, structures, 
+descriptors and ontology information.Here is the ontological structure of cobalt in CHEBI and the relationship between a cobalt atom, 
+a metal atom, and a metal atom.Due to its organic and inorganic content and clear structure, the ZOOMA tool provides the possibility 
+of converting chemical names in the text into ontology corresponding categories to be used as the basic ontology of the catalytic 
+knowledge base in relation to specific data.For categories that cannot be represented by the basic ontology, the semi-automated ontology 
+building tool Protege can be used to build the relevant concepts and relationships on its own, thus completing the construction of the 
+schema layer.
 
 \section{work foundation}
+In order to build the Relay Catalytic Knowledge Map, the following preparations have been made.
 
 \subsection{Schema design}
+A catalytic reaction message is expressed as 30 fields containing reactants, products, catalysts, reaction conditions, etc. as follows:
 
 \subsection{Article collection}
+A total of over 10,000 papers were then collected using these keywords from the following publishers' journals.
 
 \subsection{Reaction extraction}
+and try to extract information from text through rules and existing tools
+Integration of text information, conversion of tables into lists for information extraction, integration of text and table information.
 
 \section{summary}
+We plan to automate the process of extracting information from documents to structured reactions, converting the structured information 
+into a knowledge graph through existing tools. It is hoped that such knowledge mapping can be applied to scenarios such as synthesis path
+selection, reaction result prediction, reaction innovation, checking the correctness of reactions, and experimental condition screening.
+
+The current research work has several challenges, based on the fragmentation of information, the need to do document-level information 
+integration, and the need to map referents to specific entities. Some attributes appear in sentences in the form of phrases that cannot 
+be simply extracted by rules, and need to be combined with natural language processing methods for entity recognition and relationship 
+recognition. For existing specific response types, further extraction of hierarchical structures is needed when building ontologies to 
+facilitate later knowledge graph searches, and this work needs to be done by domain experts, which is very time-consuming.
 
 \begin{acknowledgments}
 We wish to acknowledge the support of the author community in using
