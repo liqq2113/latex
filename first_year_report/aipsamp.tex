@@ -121,37 +121,60 @@ to the construction of the ontology.
  \label{ Fig.3 }
 \end{figure}
 
+
 \section{Related work}
 
-
+\subsection{Entity recognition}
+The first and most important step of extracting reaction information from text is chemical entity recognition.
+Daniel Lowe proposed rule-based method to extract chemical name from text, which result in low accuracy chemical
+information.Jiang Guo proposed NLP method to extract product from text, which needs to label phrases of text. 
+Matthew C. Swain proposed a toolkit to unsupervisely extract chemical names from text.
 
 \subsection{Reaction extraction}
-Daniel Lowe published his PhD thesis at the University of Cambridge in 2012, crawling patent data as an extraction source and using 
-machine learning and rule-based methods to extract reaction information into a representation containing atomic position information, 
-but this approach has two shortcomings, one being that the patent data does not provide a good picture of trends in the field of chemical 
-synthesis, and the rule-based extraction of reactions makes the information less accurate and less likely to be recalled.
+Daniel Lowe download patent data from USPTO as an extraction source and use machine learning and rule-based 
+methods to extract reaction information into a representation containing atomic position information, 
+but this approach has two shortcomings, one being that the patent data does not provide a good picture 
+of trends in the field of chemical synthesis, and the rule-based extraction of reactions results in 
+low accuracy and low recall information.
 
 To solve these two problems Regina Barzelay's team at the MIT Computer Science and Artificial Intelligence Laboratory published a work 
-in 2021 that structured the reaction information into eight fields such as product, reaction type, reactant, solvent, etc. Using a 
+in 2021 that structured the reaction information into eight fields inlcuding product, reaction type, reactant, solvent, etc. Using a 
 natural language processing approach, the reaction information extraction process was divided into two parts, entity identification tasks
-with reaction products as a central element and other elements that will be related to the product and do the relationship extraction task.
-Implementing the conversion of a piece of text into a structured response message.
+with reaction products as a central element and other elements that will be related to the product and do the relation extraction task.
+Implementing the conversion of a piece of text into a structured response message.For such work, it costs tens of students to label sentences
+from articles, spend more than 200 hours to label and check accuracy of labeling work, which is time-consuming and labor-intensive.
 
+Weiren Wang proposed a natural language processing pipeline to capture both chemical composition and property data from articles that allows analysis
+and prediction of superalloys.It use a heuristic text multiple-relation extraction distancebased algorithm to get properties without any labeled samples.
+which can easily solve the above problem.
 
 \subsection{Atom-Atom mapping}
-After the information on the reaction has been correctly extracted, in order to be able to check the correctness of the reaction.It is necessary
-to know how atoms are converted during a reaction, a process we call atomic mapping.To automate this process, IBM's European Research Institute 
-Philip's team co-sourced the atomic mapping tool called RXNMapper in 2021.Supports the conversion of Smiles representation into Smiles 
-representation with corresponding atomic positions, and atomic mapping for different types of reactions, with a combined mapping accuracy 
-of 99.4%.
+For applications like verifying the correctness of a reaction, template-based reaction prediction, 
+retrosynthesis planning methods, reactant-reagent role assignments, reaction rules extraction and knowledge
+extraction from reaction databases. To verify the correctness of a reaction refers to a reaction must have 
+at least one product and two reactants/solvents/catalysts,reactants and products do not have the same structures,
+for a correct reaction, all atoms of the product must come from the reactants and the number of atoms of the
+reactants and the number of atoms of the products should be the same in the calculation.After the information on 
+the reaction has been correctly extracted, in order to be able to achieve the above applications.It is necessary
+to know how atoms are converted during a reaction, a process we call atomic mapping.To automate this process, 
+IBM's European Research Institute Philip's team co-sourced the atomic mapping tool called RXNMapper 
+in 2021.Supports the conversion of Smiles representation into Smiles representation with 
+corresponding atomic positions, and atomic mapping for different types of reactions, 
+with a combined mapping accuracy of 99.4%.
 
 \subsection{Ontology construction}
 Ontologies are used to define concepts in a particular domain and the relationships between concepts. They serve two purposes: to constrain 
 the data and to facilitate knowledge graph queries.Since the various compounds in chemistry are more clearly defined and related to each other.
-Ontologies can be built in a top-down seven-step process, which is simply divided into reusing existing ontologies and building custom 
-ontologies using build tools.
+Ontologies can be built in a top-down seven-step process(Fig \ref{ Fig.4 }), which is simply divided 
+into reusing existing ontologies and building custom ontologies using build tools.
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/4.png}
+ \caption{ A top-down seven-step process of building an ontology }
+ \label{ Fig.4 }
+\end{figure}
 
-ChEbi is a database of compounds published in 2007 by the Institute of Bioinformatics-Kirill team at the University of Cambridge that 
+ChEBI is a database of compounds published in 2007 by the Institute of Bioinformatics-Kirill team at the University of Cambridge that 
 describes small molecule compounds in biochemistry using standard bioinformatics terminology, providing compound names, structures, 
 descriptors and ontology information.Here is the ontological structure of cobalt in CHEBI and the relationship between a cobalt atom, 
 a metal atom, and a metal atom.Due to its organic and inorganic content and clear structure, the ZOOMA tool provides the possibility 
@@ -164,20 +187,48 @@ schema layer.
 In order to build the Relay Catalytic Knowledge Map, the following preparations have been made.
 
 \subsection{Schema design}
-A catalytic reaction message is expressed as 30 fields containing reactants, products, catalysts, reaction conditions, etc. as follows:
-
+A catalytic reaction message is expressed as 30 fields containing reactants, products, catalysts, reaction conditions, etc(Fig \ref{ Fig.5 }). as follows:
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/5.png}
+ \caption{ Schema of one reaction }
+ \label{ Fig.5 }
+\end{figure}
 \subsection{Article collection}
-A total of over 10,000 papers were then collected using these keywords from the following publishers' journals.
-
+A total of over 10,000 papers were then collected using these keywords from the following publishers' journals(Fig \ref{ Fig.6 }).
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/6.png}
+ \caption{ Number of Articles per Journal in Our Corpus }
+ \label{ Fig.6 }
+\end{figure}
 \subsection{Reaction extraction}
-and try to extract information from text through rules and existing tools
-Integration of text information, conversion of tables into lists for information extraction, integration of text and table information.
+To extract reactions from articles, we try to divide the extraction task into two parts, one is reaction extraction from text, 
+another is reaction extraction from tables.To achieve reaction extraction from text, we first need to know if current paragraph
+contains the target reaction information or not.
+% 训练词向量
+we try to use the total 12303 articles to train word vector preparing for text classification.
+% 尝试段落分类
+Use trained word vector to get paragraph text vector and apply to SVM, Random Forest method to classify paragraph.
+% 尝试规则提取化合物与属性
+If current paragraph contains the target reaction information, then input it into rule-based or NLP method to extract
+chemicals and properties.
+% 尝试表格提取化合物及属性
+Tables as semi-structured data, can be easily extracted from articles.we use Beautifulsoup to extract tables in articles as lists,
+then use tailored algorithms to extract reaction information from these lists. 
+After extraction from text and tables, we can combine these information to make reaction complete.
 
 \section{summary}
-We plan to automate the process of extracting information from documents to structured reactions, converting the structured information 
-into a knowledge graph through existing tools. It is hoped that such knowledge mapping can be applied to scenarios such as synthesis path
+We plan to automate the process of extracting information from documents to structured reactions(Fig \ref{ Fig.7 }), 
+converting the structured information into a knowledge graph through existing tools. It is hoped that such knowledge 
+mapping can be applied to scenarios such as synthesis path
 selection, reaction result prediction, reaction innovation, checking the correctness of reactions, and experimental condition screening.
-
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/7.png}
+ \caption{ Flowchart of reaction extraction }
+ \label{ Fig.7 }
+\end{figure}
 The current research work has several challenges, based on the fragmentation of information, the need to do document-level information 
 integration, and the need to map referents to specific entities. Some attributes appear in sentences in the form of phrases that cannot 
 be simply extracted by rules, and need to be combined with natural language processing methods for entity recognition and relationship 
