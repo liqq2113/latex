@@ -8,7 +8,7 @@
 %author-year,%
 %author-numerical,%
 ]{revtex4-2}
-
+\usepackage{subfigure}
 \usepackage{graphicx}% Include figure files
 \usepackage{dcolumn}% Align table columns on decimal point
 \usepackage{bm}% bold math
@@ -55,30 +55,75 @@ The lead paragraph will only be found in an article being prepared for the journ
 
 \subsection{Relay catalysis}
 
-The traditional catalytic model refers to one catalyst catalysing one reaction, through step by step synthesis to obtain the target product
- in a linear fashion.Mordern organic synthesis advocates more atomic economy and economy of steps.Relay catalysis can combine multiple 
- catalysts to achieve a one-pot tandem reaction,which is more in line with green chemistry guidelines and modern organic synthesis 
- requirements; it is an important method for the preparation of key chemical raw materials such as ethanol and formaldehyde.However, the 
- current implementation of relay catalysis, such as the screening of synthesis pathways from syngas to ethanol, remains in the traditional 
- paradigm of a time-consuming and labour-intensive manual search for reactions based on experience and extensive literature reading.Therefore, 
- we would like to have a reaction database, storing a large amount of reaction information, which can support us to implement functions 
- such as synthesis path design and selection, reaction classification and reaction result prediction, which can be automated or 
- semi-automated to reduce human labour.
+Traditional catalytic model refers to one catalyst catalysing one reaction, 
+synthesizing the target product through step by step synthesis in a linear fashion.
+However, mordern organic synthesis advocates atomic economy and economy of steps.
+Relay catalysis can combine multiple catalysts to achieve a one-pot tandem reaction,
+which can dramatically reduce waste, solvents, time, labor, etc. And can be well controled, 
+this is a perfect way to synthesize compound we want.It is more in line with green 
+chemistry guidelines and modern organic synthesis 
+requirements. Therefore, relay catalysis is an important method for the fabrication of key chemicals
+such as ethanol and formaldehyde.Nevertheless, the current implementation of 
+relay catalysis, such as the selection of synthesis pathways from syngas to ethanol, 
+remains in the traditional paradigm of a time-consuming and labour-intensive manual 
+search for reactions based on experience and extensive literature reading.Therefore, 
+we would like to have a reaction database, storing a large amount of reaction information, 
+which can support us to implement functions such as synthesis path design and selection, 
+help us to find a high-selectivity and low-energy relay catalysis pathway to obtain the target product, 
+which can be automated or semi-automated to reduce human labour.
 
 \subsection{Reaction database}
-To this end, we investigated existing reaction databases and found that they all focused on the storage of organic reactions and were mostly manually constructed and not easily accessible for commercial or other reasons.
-In addition to this, Pistachio and the USPTO dataset are derived from proprietary data and do not have real-time effects, while Scifinder and Reaxys store reaction information in an unstructured manner, besides the above databases all store reactions in a relational database which does not have inference capabilities.
-Therefore, the construction of a database of relay-catalyzed reactions became necessary.
+To this end, we investigated existing reaction databases(Fig \ref{ Fig.1 }) and found that they 
+all focused on the storage of organic reactions and were mostly manually constructed and not easily
+accessible for commercial or other reasons.
+In addition to this, Pistachio and the USPTO dataset are derived from patent data 
+and do not have real-time effects, while Scifinder and Reaxys store reaction information in 
+an unstructured manner, besides, the above databases all store reactions in a relational database 
+which does not have inference capabilities.Therefore, the construction of a database of 
+relay-catalyzed reactions became necessary.
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/1.png}
+ \caption{ Existing reaction databases}
+ \label{ Fig.1 }
+\end{figure}
 
 \subsection{Knowledge graph}
 
-In recent years, with the development of artificial intelligence, the knowledge graph has gradually attracted our attention.
-It is a multivariate relational graph where nodes represent entities and edges represent relationships between entities. In a knowledge graph, a triple is used to represent a fact such as Einstein was born in the German Empire in a subject-verb-object structure, and then these triples are associated in the form of a graph to form the structure of the graph. In recent years it has also been used in materials science to assist in materials design, so we have chosen the knowledge graph as the underlying data structure for the Relay Catalysis database and hope to build a knowledge base of reactions in conjunction with Relay Catalysis.
+In recent years, with the development of artificial intelligence, the knowledge graph has gradually 
+attracted our attention.It is a multivariate relational graph where nodes represent entities and 
+edges represent relationships between entities. In a knowledge graph, a triple is used to represent a 
+fact such as Einstein was born in the German Empire in a subject-verb-object structure, and then 
+these triples are associated in the form of a graph to form the structure of the graph(Fig \ref{ Fig.2 }). 
+In recent years it has also been used in materials science to assist in materials design, 
+so we choose the knowledge graph as the underlying data structure for the Relay Catalysis database 
+and aim to build a knowledge base of reactions in conjunction with Relay Catalysis.
 
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/2.png}
+ \caption{ An example of knowledge graph }
+ \label{ Fig.2 }
+\end{figure}
 
-\subsection{Summary}
+To construct such a knowledge graph, we can broadly divide the graph into a schema, which 
+describes the concepts in the domain and the relationships between these concepts, e.g. 
+redox reactions are a subclass of reactions, such data patterns are generally stored and 
+managed by an ontology library, and a data layer, which stores specific data such as the 
+product of react:face is acetophenone(Fig \ref{ Fig.3 }). The construction of the data layer actually 
+corresponds to the extraction of reaction information, and the pattern layer corresponds 
+to the construction of the ontology. 
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/3.png}
+ \caption{ Schema layer and data layer of a knowledge graph }
+ \label{ Fig.3 }
+\end{figure}
 
 \section{Related work}
+
+
 
 \subsection{Reaction extraction}
 Daniel Lowe published his PhD thesis at the University of Cambridge in 2012, crawling patent data as an extraction source and using 
