@@ -30,9 +30,11 @@
              %  but any date may be explicitly specified
 
 \begin{abstract}
-An article usually includes an abstract, a concise summary of the work
-covered at length in the main body of the article. It is used for
-secondary publications and for information retrieval purposes. 
+Relay catalysis is an important method to synthesize main chemicals for material design. But the 
+the current implementation of relay catalysis still remains in the traditional time-consuming 
+and labour-intensive paradigm.To ficilitate this process, we proposed an automatic natural language 
+processing pipeline to extract reaction information from articles, building a reaction 
+database with a knowledge graph for relay catalysis.
 %
 \end{abstract}
 
@@ -40,14 +42,14 @@ secondary publications and for information retrieval purposes.
                               %display desired
 \maketitle
 
-\begin{quotation}
-The ``lead paragraph'' is encapsulated with the \LaTeX\ 
-\verb+quotation+ environment and is formatted as a single paragraph before the first section heading. 
-(The \verb+quotation+ environment reverts to its usual meaning after the first sectioning command.) 
-Note that numbered references are allowed in the lead paragraph.
-%
-The lead paragraph will only be found in an article being prepared for the journal \textit{Chaos}.
-\end{quotation}
+% \begin{quotation}
+% The ``lead paragraph'' is encapsulated with the \LaTeX\ 
+% \verb+quotation+ environment and is formatted as a single paragraph before the first section heading. 
+% (The \verb+quotation+ environment reverts to its usual meaning after the first sectioning command.) 
+% Note that numbered references are allowed in the lead paragraph.
+% %
+% The lead paragraph will only be found in an article being prepared for the journal \textit{Chaos}.
+% \end{quotation}
 
 
 \section{Introduction}
@@ -59,34 +61,41 @@ Traditional catalytic model refers to one catalyst catalysing one reaction,
 synthesizing the target product through step by step synthesis in a linear fashion.
 However, mordern organic synthesis advocates atomic economy and economy of steps.
 Relay catalysis can combine multiple catalysts to achieve a one-pot tandem reaction,
-which can dramatically reduce waste, solvents, time, labor, etc. And can be well controled, 
-this is a perfect way to synthesize compound we want.It is more in line with green 
-chemistry guidelines and modern organic synthesis 
-requirements. Therefore, relay catalysis is an important method for the fabrication of key chemicals
+which can dramatically reduce waste, solvents, time, labor, etc, and can be well controled. 
+It is a perfect way to synthesize compound we need and it is more in line with green 
+chemistry guidelines and modern organic synthesis requirements. Therefore, 
+relay catalysis is an important method for the fabrication of key chemicals
 such as ethanol and formaldehyde.Nevertheless, the current implementation of 
 relay catalysis, such as the selection of synthesis pathways from syngas to ethanol, 
 remains in the traditional paradigm of a time-consuming and labour-intensive manual 
 search for reactions based on experience and extensive literature reading.Therefore, 
 we would like to have a reaction database, storing a large amount of reaction information, 
 which can support us to implement functions such as synthesis path design and selection, 
-help us to find a high-selectivity and low-energy relay catalysis pathway to obtain the target product, 
-which can be automated or semi-automated to reduce human labour.
+help us to find a high-selectivity and low-energy relay catalytic pathway to obtain the target product, 
+automatically or semi-automatically to reduce human labour.
 
 \subsection{Reaction database}
-To this end, we investigated existing reaction databases(Fig \ref{ Fig.1 }) and found that they 
-all focused on the storage of organic reactions and were mostly manually constructed and not easily
-accessible for commercial or other reasons.
-In addition to this, Pistachio and the USPTO dataset are derived from patent data 
+To this end, we investigated existing reaction databases(Table \ref{table.1}) and found that they 
+all focused on the storage of organic reactions, mostly manually constructed and not easily
+accessible for commercial or other reasons.In addition, Pistachio and the USPTO dataset are derived from patent data 
 and do not have real-time effects, while Scifinder and Reaxys store reaction information in 
-an unstructured manner, besides, the above databases all store reactions in a relational database 
-which does not have inference capabilities.Therefore, the construction of a database of 
-relay-catalyzed reactions became necessary.
-\begin{figure}[htbp]
- \centering
- \includegraphics[width=0.7\textwidth]{figure/1.png}
- \caption{ Existing reaction databases}
- \label{ Fig.1 }
-\end{figure}
+an unstructured manner. Besides, all of the above are relational databases which do not have inference capabilities.
+Therefore, the construction of a database for relay-catalyzed reactions became necessary.
+
+\begin{table}[h!]
+\begin{tabular}{ |p{3cm}|p{3cm}|p{3cm}|p{3cm}|p{3cm}|  }
+\hline
+Database&Developer&Method&Focus&Avaliability\\ \hline
+CAS data(SciFinder)& ACS    &Manually curated&   Organic reactions&Not avaliable\\ \hline
+Reaxys&   Elsevier  & Manually curated   &Organic reactions&For commercial use\\ \hline
+Pistachio & NextMove & Java-based extraction &  Organic reactions&Not avaliable\\ \hline
+AZ ELN(AstraZeneca ELN)    &AstraZeneca & Manually curated&  Organic reactions&Not avaliable\\ \hline
+USPTO&   Daniel Lowe  & Java-based extraction&Organic reactions&Only <2016 avaliable\\ \hline
+ORD(open reaction database) & MIT and Google  & Manually curated   &Organic or Inorganic reactions&Avaliable but manually upload\\ \hline
+\end{tabular}
+\caption{Existing reaction databases}
+\label{table.1}
+\end{table}
 
 \subsection{Knowledge graph}
 
@@ -94,10 +103,12 @@ In recent years, with the development of artificial intelligence, the knowledge 
 attracted our attention.It is a multivariate relational graph where nodes represent entities and 
 edges represent relationships between entities. In a knowledge graph, a triple is used to represent a 
 fact such as Einstein was born in the German Empire in a subject-verb-object structure, and then 
-these triples are associated in the form of a graph to form the structure of the graph(Fig \ref{ Fig.2 }). 
-In recent years it has also been used in materials science to assist in materials design, 
+these triples are associated in the form of a graph to form the structure of the graph(Fig \ref{ Fig.2 }).
+As knowledge graphs can easily represent different types of data, facilitate path queries and can support inference, 
+prediction tasks, It is used by many platforms as a base data support such as DBpedia, Freebase, Wikidata,
+YAGO, etc.In recent years it has also been used in materials science to assist in materials design, 
 so we choose the knowledge graph as the underlying data structure for the Relay Catalysis database 
-and aim to build a knowledge base of reactions in conjunction with Relay Catalysis.
+, aiming to build a catalytic reactions knowledge base.
 
 \begin{figure}[htbp]
  \centering
@@ -106,12 +117,32 @@ and aim to build a knowledge base of reactions in conjunction with Relay Catalys
  \label{ Fig.2 }
 \end{figure}
 
-To construct such a knowledge graph, we can broadly divide the graph into a schema, which 
-describes the concepts in the domain and the relationships between these concepts, e.g. 
-redox reactions are a subclass of reactions, such data patterns are generally stored and 
+The process of building a knowledge graph starts from the raw data and uses a series of automated or 
+semi-automated technical means to extract knowledge elements (facts) from the raw data and store them 
+in the data and schema layers of the knowledge base.It is an iterative updating process, and according 
+to the logic of knowledge acquisition, each iteration consists of three stages: information extraction, 
+knowledge fusion and knowledge processing(Fig \ref{ Fig.1 }).Information extraction, that is, to extract 
+entities, attributes and the relationship between entities from various types of data sources, 
+such as that we can extract Steve Balmer, Microsoft, as entities, and CEO, friends as relations from
+text (Steve Balmer, the CEO of Microsoft).Knowledge fusion, after acquiring new knowledge, it needs to be 
+integrated to eliminate contradictions and ambiguities. For example, some entities may have multiple 
+expressions, and a particular title may correspond to many different entities.Like the Seattle-headquartered 
+software giant and the richest man in the world both refers to Bill Gates. Knowledge processing, for the integrated new knowledge, 
+we can construct ontology and conduct knowledge reasoning to gain more knowledge elments (facts). 
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/1.png}
+ \caption{ Construction of a knowledge graph }
+ \label{ Fig.1 }
+\end{figure}
+
+To construct a knowledge graph for a specific domain, in our work, this domain refers to chemistry, we can generally divide the graph 
+construction into two parts-a schema, which describes the concepts in the domain and the relationships 
+between these concepts, e.g. redox reactions are a subclass of reaction, such data patterns are stored and 
 managed by an ontology library, and a data layer, which stores specific data such as the 
 product of react:face is acetophenone(Fig \ref{ Fig.3 }). The construction of the data layer actually 
-corresponds to the extraction of reaction information, and the pattern layer corresponds 
+corresponds to the extraction of reaction information, and the schema layer corresponds 
 to the construction of the ontology. 
 
 \begin{figure}[htbp]
@@ -125,7 +156,10 @@ to the construction of the ontology.
 \section{Related work}
 
 \subsection{Entity recognition}
-The first and most important step of extracting reaction information from text is chemical entity recognition.
+To extract reaction from text, the first and most important step is chemical entity recognition.
+% TODO
+% OSCAR4 derive names from text
+% OPSIN convert chemical names to structures
 Daniel Lowe proposed rule-based method to extract chemical name from text, which result in low accuracy chemical
 information.Jiang Guo proposed NLP method to extract product from text, which needs to label phrases of text. 
 Matthew C. Swain proposed a toolkit to unsupervisely extract chemical names from text.
