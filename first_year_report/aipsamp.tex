@@ -19,7 +19,7 @@
 
 \preprint{AIP/123-QED}
 
-\title[Knowledge graph construction for relay catalysis]{Knowledge graph construction for relay catalysis}% Force line breaks with \\
+\title[Catalytic knowledge graph construction and application]{Catalytic knowledge graph construction and application}% Force line breaks with \\
 \thanks{Footnote to title of article.}
 
 \author{Qingqing Li}
@@ -31,14 +31,16 @@
 
 \begin{abstract}
 Relay catalysis is an important method to synthesize main chemicals for material design. But the 
-the current implementation of relay catalysis still remains in the traditional time-consuming 
-and labour-intensive paradigm.To ficilitate this process, we proposed an automatic natural language 
-processing pipeline to extract reaction information from articles, building a reaction 
-database with a knowledge graph for relay catalysis.
+the current implementation of relay catalysis remains in the traditional time-consuming 
+and labor-intensive paradigm. To facilitate this process, we try to build an automatic natural language 
+processing pipeline to extract reaction information from articles, constructing a reaction 
+database with a knowledge graph for relay catalysis to support specific-product synthesis pathway selection/design or other applications.
+
+.
 %
 \end{abstract}
 
-\keywords{Knowledge graph, Relay catalysis, Reaction database}%Use showkeys class option if keyword
+\keywords{Knowledge graph, Relay catalysis, Reaction database, Specific-product synthesis pathway selection}%Use the show keys class option if the keyword
                               %display desired
 \maketitle
 
@@ -57,30 +59,31 @@ database with a knowledge graph for relay catalysis.
 
 \subsection{Relay catalysis}
 
-Traditional catalytic model refers to one catalyst catalysing one reaction, 
-synthesizing the target product through step by step synthesis in a linear fashion.
-However, mordern organic synthesis advocates atomic economy and economy of steps.
+The traditional catalytic model refers to one catalyst catalyzing one reaction, 
+synthesizing the target product through a step-by-step synthesis in a linear fashion.
+However, modern organic synthesis advocates atomic economy and economy of steps.
 Relay catalysis can combine multiple catalysts to achieve a one-pot tandem reaction,
-which can dramatically reduce waste, solvents, time, labor, etc, and can be well controled. 
-It is a perfect way to synthesize compound we need and it is more in line with green 
+which can dramatically reduce waste, solvents, time, labor, etc, and can be well controlled. 
+It is a perfect way to synthesize compounds we need and is more in line with green 
 chemistry guidelines and modern organic synthesis requirements. Therefore, 
-relay catalysis is an important method for the fabrication of key chemicals
-such as ethanol and formaldehyde.Nevertheless, the current implementation of 
+relay catalysis is an essential method for the fabrication of key chemicals
+such as ethanol and formaldehyde. Nevertheless, the current implementation of 
 relay catalysis, such as the selection of synthesis pathways from syngas to ethanol, 
-remains in the traditional paradigm of a time-consuming and labour-intensive manual 
-search for reactions based on experience and extensive literature reading.Therefore, 
-we would like to have a reaction database, storing a large amount of reaction information, 
-which can support us to implement functions such as synthesis path design and selection, 
-help us to find a high-selectivity and low-energy relay catalytic pathway to obtain the target product, 
-automatically or semi-automatically to reduce human labour.
+remains in the traditional paradigm of a time-consuming and labor-intensive manual 
+search for reactions based on experience and extensive literature reading. Therefore, 
+we would like to have a reaction database that stores a large amount of reaction information, 
+which can support us in implementing functions such as synthesis path design/selection 
+and help us to find a high-selectivity and low-energy pathway to obtain the target product.
+
 
 \subsection{Reaction database}
 To this end, we investigated existing reaction databases(Table \ref{table.1}) and found that they 
 all focused on the storage of organic reactions, mostly manually constructed and not easily
-accessible for commercial or other reasons.In addition, Pistachio and the USPTO dataset are derived from patent data 
-and do not have real-time effects, while Scifinder and Reaxys store reaction information in 
-an unstructured manner. Besides, all of the above are relational databases which do not have inference capabilities.
-Therefore, the construction of a database for relay-catalyzed reactions became necessary.
+accessible for commercial or other reasons. In addition, Pistachio and the USPTO dataset are derived from patent data without real-time effects,
+while Scifinder and Reaxys store reaction information in an unstructured manner. Besides, all of the 
+above are relational databases that do not have inference capabilities. Therefore, the construction 
+of a database for relay-catalyzed reactions became necessary.
+
 
 \begin{table}[h!]
 \begin{tabular}{ |p{3cm}|p{3cm}|p{3cm}|p{3cm}|p{3cm}|  }
@@ -100,15 +103,14 @@ ORD(open reaction database) & MIT and Google  & Manually curated   &Organic or I
 \subsection{Knowledge graph}
 
 In recent years, with the development of artificial intelligence, the knowledge graph has gradually 
-attracted our attention.It is a multivariate relational graph where nodes represent entities and 
+attracted our attention. It is a multivariate relational graph where nodes represent entities and 
 edges represent relationships between entities. In a knowledge graph, a triple is used to represent a 
 fact such as Einstein was born in the German Empire in a subject-verb-object structure, and then 
-these triples are associated in the form of a graph to form the structure of the graph(Fig \ref{ Fig.2 }).
+these triples are associated to form the structure of the graph(Fig \ref{ Fig.2 }).
 As knowledge graphs can easily represent different types of data, facilitate path queries and can support inference, 
-prediction tasks, It is used by many platforms as a base data support such as DBpedia, Freebase, Wikidata,
-YAGO, etc.In recent years it has also been used in materials science to assist in materials design, 
-so we choose the knowledge graph as the underlying data structure for the Relay Catalysis database 
-, aiming to build a catalytic reactions knowledge base.
+and prediction tasks, It is used by many platforms as a base data support such as DBpedia, Freebase, Wikidata,
+YAGO, etc. In recent years it has also been used in materials science to assist in materials design, 
+so we choose the knowledge graph as the underlying data structure for the Relay Catalysis database, aiming to build a catalytic reactions knowledge base.
 
 \begin{figure}[htbp]
  \centering
@@ -119,16 +121,16 @@ so we choose the knowledge graph as the underlying data structure for the Relay 
 
 The process of building a knowledge graph starts from the raw data and uses a series of automated or 
 semi-automated technical means to extract knowledge elements (facts) from the raw data and store them 
-in the data and schema layers of the knowledge base.It is an iterative updating process, and according 
+in the data and schema layers of the knowledge base. It is an iterative updating process and according 
 to the logic of knowledge acquisition, each iteration consists of three stages: information extraction, 
-knowledge fusion and knowledge processing(Fig \ref{ Fig.1 }).Information extraction, that is, to extract 
+knowledge fusion and knowledge processing(Fig \ref{ Fig.1 }). Information extraction, that is, to extract 
 entities, attributes and the relationship between entities from various types of data sources, 
-such as that we can extract Steve Balmer, Microsoft, as entities, and CEO, friends as relations from
-text (Steve Balmer, the CEO of Microsoft).Knowledge fusion, after acquiring new knowledge, it needs to be 
+such as that we can extract Steve Balmer, Microsoft, as entities, and CEO as a relation between these entities from
+the text (Steve Balmer, the CEO of Microsoft). Knowledge fusion, after acquiring new knowledge, needs to be 
 integrated to eliminate contradictions and ambiguities. For example, some entities may have multiple 
-expressions, and a particular title may correspond to many different entities.Like the Seattle-headquartered 
-software giant and the richest man in the world both refers to Bill Gates. Knowledge processing, for the integrated new knowledge, 
-we can construct ontology and conduct knowledge reasoning to gain more knowledge elments (facts). 
+expressions, and a particular title may correspond to many different entities. Like the Seattle-headquartered 
+the software giant and the richest man in the world both refer to Bill Gates. In knowledge processing, for the integrated new knowledge, 
+we can construct ontology and conduct knowledge reasoning to gain more knowledge elements (facts) making the knowledge graph complete. 
 
 \begin{figure}[htbp]
  \centering
@@ -138,12 +140,12 @@ we can construct ontology and conduct knowledge reasoning to gain more knowledge
 \end{figure}
 
 To construct a knowledge graph for a specific domain, in our work, this domain refers to chemistry, we can generally divide the graph 
-construction into two parts-a schema, which describes the concepts in the domain and the relationships 
+construction into two parts-a schemas, which describes the concepts in the domain and the relationships 
 between these concepts, e.g. redox reactions are a subclass of reaction, such data patterns are stored and 
 managed by an ontology library, and a data layer, which stores specific data such as the 
 product of react:face is acetophenone(Fig \ref{ Fig.3 }). The construction of the data layer actually 
 corresponds to the extraction of reaction information, and the schema layer corresponds 
-to the construction of the ontology. 
+to the construction of ontology. 
 
 \begin{figure}[htbp]
  \centering
@@ -152,19 +154,133 @@ to the construction of the ontology.
  \label{ Fig.3 }
 \end{figure}
 
+\section{Research condition}
+
+
+
 
 \section{Related work}
+We investigated four specific research directions of reaction extraction-entity recognition, relation extraction
+and reaction extraction with these methods.
 
 \subsection{Entity recognition}
-To extract reaction from text, the first and most important step is chemical entity recognition.
-% TODO
-% OSCAR4 derive names from text
-% OPSIN convert chemical names to structures
-Daniel Lowe proposed rule-based method to extract chemical name from text, which result in low accuracy chemical
-information.Jiang Guo proposed NLP method to extract product from text, which needs to label phrases of text. 
-Matthew C. Swain proposed a toolkit to unsupervisely extract chemical names from text.
+Entity recognition refers to detecting named entities from text and classifying them into predefined classes.
+In general, existing methods can be divided into the rule-based method, statistical model-based approach and 
+deep learning-based approach.
+% Rule-based approach
+The rule-based approach is the early method of writing hand-curated rules, such as regular matching, curated 
+by specialists of a specific domain. This extraction style can achieve
+high accuracy and recall when it is used on small datasets. However, as the dataset grows, 
+the rule-set construction cycle becomes longer and less flexible.
+% Statistical model-based approach
+The statistical model-based approach train model with a completely annotated corpus or partially annotated corpus.
+The main models used are Hidden Markov Model, Conditional Markov Model, Maximum Entropy Model and Conditional Random
+Fields Model. These methods regard entity recognition as a sequence-to-sequence problem.
+% Deep learning-based approach
+With the widespread adoption of deep learning methods in the field 
+of natural language processing, the deep neural network is applied to 
+entity recognition with good effects. In contrast to traditional 
+statistical models, deep learning-based approaches take a vector of words in the text as input directly and implement end-to-end named entity recognition through neural networks, no longer relying on manually defined features.
+Currently, neural networks used for named entity
+recognition are Convolutional Neural networks (CNN), 
+Recurrent Neural networks (RNN) and neural networks 
+that introduces the Attention Mechanism. In general, the different
+neural network structures act as encoders in the named entity 
+recognition process, obtaining a new vector representation 
+of each word based on the initial input and the contextual 
+information of the word, and finally outputting the annotation 
+results for each word through a CRF model.
+% Chemical entity recognition
+The emergence of "big data" initiatives has led to the need for tools that 
+can automatically extract valuable information from large volumes of unstructured
+data, such as the scientific literature. Since chemical information can be present
+in figures, tables, and textual paragraphs, successful information extraction often
+depends on the ability to interpret all of these domains simultaneously. A complete
+toolkit is present for the automated extraction of chemical entities and their associated
+properties, measurements, and relationships from scientific documents that can be used
+to populate structure chemical databases. It uses unsupervised word clustering based on
+a massive corpus of chemistry  articles to achieve chemical named entity recognition with an 
+F-score of 93.4%.
+
+\subsection{Relation extraction}
+Relation extraction is one of the most important sub-tasks of knowledge extraction for 
+unstructured text data, where the semantic relationship between two or more entities is extracted 
+from the text. Relation extraction is closely related to entity extraction, generally after 
+identifying the entities in the text, then extracting the possible relationships between them, 
+or many joint models do both tasks together. The following are some of the main methods
+for extracting relations.
+
+\subsubsection{Templete-based approach}
+For the text "water is a reactant of WGS reaction", the pattern can be constructed as "[1] is a reactant of [2]",
+We can get entities for "is a reactant of" relation with this pattern. The advantage of the template-based relationship 
+extraction approach is that templates are simple to construct and allow relatively quick implementation of relationship 
+extraction systems on small datasets. Similarly, when the data size is large, manual construction of templates takes 
+a lot of time for domain experts. In addition, template-based relationship extraction systems are less portable, 
+requiring the templates to be rebuilt when faced with the same problem in another domain. 
+Finally, the recall rate of template-based relationship extraction systems is generally low due to 
+the limited number of manually constructed templates and the insufficient coverage of templates.
+
+\subsubsection{Supervised learning-based approach}
+Supervised learning-based relationship extraction methods transform relationship extraction into a classification 
+problem by training a supervised learning model for relationship extraction based on a large amount of annotated 
+data. The general steps in relationship extraction using supervised learning methods include: predefining the 
+type of relationship; manually annotating the data; designing the features required for relationship recognition 
+(relying on feature engineering), which are typically computed based on the context of the sentence 
+in which the entity is located; selecting a classification model (e.g. support vector machines, 
+neural networks and plain Bayes) and training the model based on the annotated data; 
+and evaluating the trained model.
+
+\subsubsection{Deep learning-based approach}
+At present, existing deep learning-based relation extraction methods can be divided into two classes:
+pipelined method and joint extraction method.
+The pipeline method treats entity recognition and relation extraction as two separate processes that 
+do not affect each other, but the relation extraction task is performed based on results of entity recognition,
+therefore, the results of relation extraction rely on that of entity extraction such as CR-CNN,
+Att-Pooling-CNNs and Att-BLSTM.These methods have the following disadvantages:
+\begin{itemize}
+    \item[1] Error propagation, where errors in the entity recognition module affect the performance of the following relation extraction.
+    \item[2] Ignoring the relation between the two subtasks.
+    \item[3] Unnecessary redundant information is generated as the identified entities are paired in pairs and then classified relationally, those unrelated entity pairs introduce redundant information and raise the error rate.
+\end{itemize}
+Joint extraction methods combine entity extraction and relation extraction, where a sentence is an input 
+and a triplet of entities with relations is directly obtained by a joint model of entity recognition 
+and relation extraction. This can overcome the drawbacks of the pipelined approach above, but probably cause more 
+complex structures such as BERT, LSTM-RNN, DGCNN, etc.
+
+\subsubsection{weakly supervised learning-based approach}
+Supervised learning-based relationship extraction methods require a large training corpus, 
+especially for deep learning-based methods, where the optimization of the model relies more on a 
+large amount of training data. When the training corpus is insufficient, weakly supervised learning methods 
+can use only a small amount of annotated data for model learning. Weakly supervised learning-based relationship 
+extraction methods mainly include remotely supervised methods and Bootstrapping methods.
+
+% remotely supervised methods
+The remotely supervised approach automatically constructs a large amount of training data by 
+aligning the knowledge graph with unstructured text, reducing the model's reliance on manually 
+annotated data and enhancing the model's cross-domain adaptability. The underlying assumption 
+of the remotely supervised approach is that if two entities have some relationship in the knowledge graph, 
+then the sentences containing both entities express that relationship. The remotely supervised relation 
+extraction method can make use of the rich knowledge graph information to obtain training data, 
+effectively reducing the workload of manual annotation. However, based on the assumption of 
+remote supervision, a large amount of noise will be introduced into the training data, 
+thus triggering the phenomenon of semantic drift. Existing work includes PCNNs (Piecewise Convolutional Neural Networks) and
+CNN-RL.
+
+% Bootstrapping methods
+The Bootstrapping method originates from the autonomous sampling method in statistics, 
+which uses a small number of instances as an initial seed set, then learns on the seed set 
+to obtain a template for relationship extraction, and then uses the template to extract more instances 
+to be added to the seed set. Through continuous iteration, the Bootstrapping method can extract 
+a large number of instances of a relationship from the text. Several entity relationship extraction 
+systems use the Bootstrapping approach, such as DIPER, Snowball and NELL, but they are out-update. 
+The advantages of the Bootstrapping approach are that the relationship extraction system is cheap to build, 
+suitable for large-scale relationship extraction tasks, and can discover new relationships. 
+However, the sensitivity to initial seeds, the problem of semantic drift and the low accuracy of the 
+results have made the bootstrapping method fade out of the limelight.
 
 \subsection{Reaction extraction}
+There are some works about extracting reaction information from texts.
+
 Daniel Lowe download patent data from USPTO as an extraction source and use machine learning and rule-based 
 methods to extract reaction information into a representation containing atomic position information, 
 but this approach has two shortcomings, one being that the patent data does not provide a good picture 
@@ -172,14 +288,14 @@ of trends in the field of chemical synthesis, and the rule-based extraction of r
 low accuracy and low recall information.
 
 To solve these two problems Regina Barzelay's team at the MIT Computer Science and Artificial Intelligence Laboratory published a work 
-in 2021 that structured the reaction information into eight fields inlcuding product, reaction type, reactant, solvent, etc. Using a 
+in 2021 that structured the reaction information into eight fields including product, reaction type, reactant, solvent, etc. Using a 
 natural language processing approach, the reaction information extraction process was divided into two parts, entity identification tasks
 with reaction products as a central element and other elements that will be related to the product and do the relation extraction task.
-Implementing the conversion of a piece of text into a structured response message.For such work, it costs tens of students to label sentences
-from articles, spend more than 200 hours to label and check accuracy of labeling work, which is time-consuming and labor-intensive.
+Implementing the conversion of a piece of text into a structured response message. For such work, it costs tens of students to label sentences
+from articles, spend more than 200 hours to label and check the accuracy of labeling work, which is time-consuming and labor-intensive.
 
-Weiren Wang proposed a natural language processing pipeline to capture both chemical composition and property data from articles that allows analysis
-and prediction of superalloys.It use a heuristic text multiple-relation extraction distancebased algorithm to get properties without any labeled samples.
+Weiren Wang proposed a natural language processing pipeline to capture both chemical composition and property data from articles that allow analysis
+and prediction of superalloys. It uses a heuristic text multiple-relation extraction distance-based algorithm to get properties without any labeled samples.
 which can easily solve the above problem.
 
 \subsection{Atom-Atom mapping}
