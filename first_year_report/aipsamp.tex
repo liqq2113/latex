@@ -30,6 +30,7 @@
              %  but any date may be explicitly specified
 
 \begin{abstract}
+    
 Relay catalysis is an important method to synthesize main chemicals such as ethanol and formaldehyde. But the 
 the current implementation of relay catalysis remains in the traditional time-consuming 
 and labor-intensive paradigm of reading extensive journal articles and searching reactions manually. 
@@ -63,30 +64,28 @@ synthesis pathway selection/design, reaction outcome prediction or other applica
 The traditional catalytic model refers to one catalyst catalyzing one reaction, 
 synthesizing the target product through a step-by-step synthesis in a linear fashion.
 However, modern organic synthesis advocates atomic economy and economy of steps.
-Relay catalysis can combine multiple catalysts to achieve a one-pot tandem reaction,
-which can dramatically reduce waste, solvents, time, labor, etc, and can be well controlled\cite{wang2020recent}. 
+Relay catalysis can combine multiple catalysts to achieve a one-pot tandem reaction, 
+which can dramatically reduce waste, solvents, time, labor, etc, and can be well 
+controlled\cite{xiang2013asymmetric, wang2020recent}. 
 It is a perfect way to synthesize compounds we need and is more in line with green 
-chemistry guidelines and modern organic synthesis requirements. Therefore, 
+chemistry guidelines and modern organic synthesis requirements\cite{anastas2010green}. Therefore, 
 relay catalysis is an essential method for the fabrication of key chemicals
 such as ethanol and formaldehyde. Nevertheless, the current implementation of 
-relay catalysis, such as the selection of synthesis pathways from syngas to ethanol, 
+relay catalysis, such as the selection of synthesis pathways from syngas to ethanol\cite{kang2020single}, 
 remains in the traditional paradigm of a time-consuming and labor-intensive manual 
 search for reactions based on experience and extensive literature reading. Therefore, 
 we would like to have a reaction database that stores a large amount of reaction information, 
 which can support us in implementing functions such as synthesis path design/selection 
-and help us to find a high-selectivity and low-energy pathway to obtain the target product.
-Most existing works are about organic chemistry, biochemistry, or computational chemistry when combining 
-chemistry with artificial intelligence， But catalytic chemistry is lagging as an important subfield of 
-chemistry.
+and helping us to find a high-selectivity and low-energy pathway to obtain the target product or
+predicting reaction outcomes through existing reactions.
 
 
 \subsection{Reaction database}
-To this end, we investigated existing reaction databases(Table \ref{table.1}) and found that they 
+To achieve the above requirements, we investigated existing reaction databases(Table \ref{table.1}) and found that they 
 all focused on the storage of organic reactions, mostly manually constructed and not easily
-accessible for commercial or other reasons. In addition, Pistachio and the USPTO dataset are derived from patent data without real-time effects,
-while Scifinder and Reaxys store reaction information in an unstructured manner. Besides, all of the 
-above are relational databases that do not have inference capabilities. Therefore, the construction 
-of a database for relay-catalyzed reactions became necessary.
+accessible for commercial or other reasons. In addition, Pistachio \cite{pistachio} and the USPTO \cite{lowe2012extraction} dataset are derived from patent data without real-time effects,
+while Scifinder \cite{gabrielson2018scifinder} and Reaxys \cite{Reaxys} store reaction information in an unstructured manner. Besides, all of the 
+above are relational databases that do not have inference capabilities. Therefore, the construction of a database for catalytic reactions became necessary.
 
 
 \begin{table}[h!]
@@ -105,16 +104,20 @@ ORD(open reaction database) & MIT and Google  & Manually curated   &Organic or I
 \end{table}
 
 \subsection{Knowledge graph}
-
-In recent years, with the development of artificial intelligence, the knowledge graph has gradually 
+Most existing works are about organic chemistry, biochemistry, or computational chemistry when combining 
+chemistry with AI (artificial intelligence) \cite{winston1992artificial}，
+but catalytic chemistry is lagging as an important subfield of 
+chemistry. In recent years, with the development of AI, the knowledge graph \cite{auer2018towards} has gradually 
 attracted our attention. It is a multivariate relational graph where nodes represent entities and 
 edges represent relationships between entities. In a knowledge graph, a triple is used to represent a 
 fact such as Einstein was born in the German Empire in a subject-verb-object structure, and then 
 these triples are associated to form the structure of the graph(Fig \ref{ Fig.2 }).
 As knowledge graphs can easily represent different types of data, facilitate path queries and can support inference, 
-and prediction tasks, It is used by many platforms as a base data support such as DBpedia, Freebase, Wikidata,
-YAGO, etc. In recent years it has also been used in materials science to assist in materials design, 
-so we choose the knowledge graph as the underlying data structure for the Relay Catalysis database, aiming to build a catalytic reactions knowledge base.
+and prediction tasks, it is used by many platforms as a base data structure such as DBpedia \cite{auer2007dbpedia}, 
+Freebase \cite{inproceedings}, Wikidata \cite{vrandevcic2012wikidata}, YAGO \cite{rebele2016yago}, etc. 
+In recent years it has also been used in materials science to assist in materials design\cite{cole2020design}, 
+so we choose the knowledge graph as the underlying data structure for the Relay Catalysis database, 
+aiming to build a catalytic reactions knowledge base.
 
 \begin{figure}[htbp]
  \centering
@@ -125,7 +128,7 @@ so we choose the knowledge graph as the underlying data structure for the Relay 
 
 The process of building a knowledge graph starts from the raw data and uses a series of automated or 
 semi-automated technical means to extract knowledge elements (facts) from the raw data and store them 
-in the data and schema layers of the knowledge base. It is an iterative updating process and according 
+in the data and schema layers of the knowledge base\cite{gutierrez2021knowledge}. It is an iterative updating process and according 
 to the logic of knowledge acquisition, each iteration consists of three stages: information extraction, 
 knowledge fusion and knowledge processing(Fig \ref{ Fig.1 }). Information extraction, that is, to extract 
 entities, attributes and the relationship between entities from various types of data sources, 
@@ -143,13 +146,13 @@ we can construct ontology and conduct knowledge reasoning to gain more knowledge
  \label{ Fig.1 }
 \end{figure}
 
-To construct a knowledge graph for a specific domain, in our work, this domain refers to chemistry, we can generally divide the graph 
-construction into two parts-a schemas, which describes the concepts in the domain and the relationships 
+To construct a knowledge graph for a specific domain, in our work, which refers to catalytic chemistry, 
+we can generally divide the graph construction into two parts-a schemas, which describe the concepts in the domain and the relationships 
 between these concepts, e.g. redox reactions are a subclass of reaction, such data patterns are stored and 
 managed by an ontology library, and a data layer, which stores specific data such as the 
 product of react:face is acetophenone(Fig \ref{ Fig.3 }). The construction of the data layer actually 
 corresponds to the extraction of reaction information, and the schema layer corresponds 
-to the construction of ontology. 
+to the construction of ontology\cite{eibeck2019j}. 
 
 \begin{figure}[htbp]
  \centering
@@ -168,7 +171,7 @@ We investigated four specific research directions of reaction extraction-entity 
 and reaction extraction with these methods.
 
 \subsection{Entity recognition}
-Entity recognition refers to detecting named entities from text and classifying them into predefined classes.
+Entity recognition refers to recognizing named entities from text and classifying them into predefined classes.
 In general, existing methods can be divided into the rule-based method, statistical model-based approach and 
 deep learning-based approach.
 % Rule-based approach
@@ -178,17 +181,20 @@ high accuracy and recall when it is used on small datasets. However, as the data
 the rule-set construction cycle becomes longer and less flexible.
 % Statistical model-based approach
 The statistical model-based approach train model with a completely annotated corpus or partially annotated corpus.
-The main models used are Hidden Markov Model, Conditional Markov Model, Maximum Entropy Model and Conditional Random
-Fields Model. These methods regard entity recognition as a sequence-to-sequence problem.
-% Deep learning-based approach
+The main models used are Hidden Markov Model \cite{fine1998hierarchical}, Conditional Markov Model \cite{cook2004conditional}, 
+Maximum Entropy Model \cite{ratnaparkhi1996maximum} and Conditional Random Fields Model\cite{wallach2004conditional}. 
+These methods regard entity recognition as a sequence-to-sequence problem.
+Compare to general classification task, prediction of current label for sequence labeling task 
+is not only relavent with current input but also previously predicted labels.  
+% Deep learning-based approachwang2020recent
 With the widespread adoption of deep learning methods in the field 
 of natural language processing, the deep neural network is applied to 
 entity recognition with good effects. In contrast to traditional 
 statistical models, deep learning-based approaches take a vector of words in the text as input directly and implement end-to-end named entity recognition through neural networks, no longer relying on manually defined features.
-Currently, neural networks used for named entity
-recognition are Convolutional Neural networks (CNN), 
-Recurrent Neural networks (RNN) and neural networks 
-that introduces the Attention Mechanism. In general, the different
+Currently, major neural networks used for named entity
+recognition are Convolutional Neural networks (CNN)\cite{o2015introduction}, 
+Recurrent Neural networks (RNN) \cite{medsker2001recurrent} and neural networks 
+that introduces the Attention Mechanism\cite{tilk2016bidirectional}. In general, the different
 neural network structures act as encoders in the named entity 
 recognition process, obtaining a new vector representation 
 of each word based on the initial input and the contextual 
@@ -202,7 +208,7 @@ in figures, tables, and textual paragraphs, successful information extraction of
 depends on the ability to interpret all of these domains simultaneously. A complete
 toolkit is present for the automated extraction of chemical entities and their associated
 properties, measurements, and relationships from scientific documents that can be used
-to populate structure chemical databases. It uses unsupervised word clustering based on
+to populate structure chemical databases\cite{swain2016chemdataextractor}. It uses unsupervised word clustering based on
 a massive corpus of chemistry  articles to achieve chemical named entity recognition with an 
 F-score of 93.4%.
 
@@ -230,17 +236,17 @@ problem by training a supervised learning model for relationship extraction base
 data. The general steps in relationship extraction using supervised learning methods include: predefining the 
 type of relationship; manually annotating the data; designing the features required for relationship recognition 
 (relying on feature engineering), which are typically computed based on the context of the sentence 
-in which the entity is located; selecting a classification model (e.g. support vector machines, 
-neural networks and plain Bayes) and training the model based on the annotated data; 
+in which the entity is located; selecting a classification model (e.g. support vector machines\cite{huang2018applications}, 
+neural networks and naive Bayes \cite{frasconi2001text}) and training the model based on the annotated data; 
 and evaluating the trained model.
 
 \subsubsection{Deep learning-based approach}
 At present, existing deep learning-based relation extraction methods can be divided into two classes:
-pipelined method and joint extraction method.
+pipelined method and joint extraction method\cite{zheng2017joint}.
 The pipeline method treats entity recognition and relation extraction as two separate processes that 
 do not affect each other, but the relation extraction task is performed based on results of entity recognition,
-therefore, the results of relation extraction rely on that of entity extraction such as CR-CNN,
-Att-Pooling-CNNs and Att-BLSTM.These methods have the following disadvantages:
+therefore, the results of relation extraction rely on that of entity extraction such as CR-CNN\cite{nogueira2015classifying},
+Att-Pooling-CNNs\cite{li2018attention} and Att-BLSTM\cite{chen2018wifi}.These methods have the following disadvantages:
 \begin{itemize}
     \item[1] Error propagation, where errors in the entity recognition module affect the performance of the following relation extraction.
     \item[2] Ignoring the relation between the two subtasks.
@@ -249,9 +255,9 @@ Att-Pooling-CNNs and Att-BLSTM.These methods have the following disadvantages:
 Joint extraction methods combine entity extraction and relation extraction, where a sentence is an input 
 and a triplet of entities with relations is directly obtained by a joint model of entity recognition 
 and relation extraction. This can overcome the drawbacks of the pipelined approach above, but probably cause more 
-complex structures such as BERT, LSTM-RNN, DGCNN, etc.
+complex structures such as BERT \cite{tenney2019bert}, LSTM-RNN \cite{selvin2017stock}, DGCNN \cite{phan2018dgcnn}, etc.
 
-\subsubsection{weakly supervised learning-based approach}
+\subsubsection{Weakly supervised learning-based approach}
 Supervised learning-based relationship extraction methods require a large training corpus, 
 especially for deep learning-based methods, where the optimization of the model relies more on a 
 large amount of training data. When the training corpus is insufficient, weakly supervised learning methods 
@@ -267,8 +273,8 @@ then the sentences containing both entities express that relationship. The remot
 extraction method can make use of the rich knowledge graph information to obtain training data, 
 effectively reducing the workload of manual annotation. However, based on the assumption of 
 remote supervision, a large amount of noise will be introduced into the training data, 
-thus triggering the phenomenon of semantic drift. Existing work includes PCNNs (Piecewise Convolutional Neural Networks) and
-CNN-RL.
+thus triggering the phenomenon of semantic drift. Existing work includes PCNNs (Piecewise Convolutional Neural Networks) \cite{ji2008mixed} and
+CNN-RL\cite{wen2020new}.
 
 % Bootstrapping methods
 The Bootstrapping method originates from the autonomous sampling method in statistics, 
@@ -276,17 +282,16 @@ which uses a small number of instances as an initial seed set, then learns on th
 to obtain a template for relationship extraction, and then uses the template to extract more instances 
 to be added to the seed set. Through continuous iteration, the Bootstrapping method can extract 
 a large number of instances of a relationship from the text. Several entity relationship extraction 
-systems use the Bootstrapping approach, such as DIPER, Snowball and NELL, but they are out-update. 
+systems use the Bootstrapping approach, such as DIPER \cite{gallet2015diuretic}, Snowball \cite{agichtein2000snowball} and NELL, but they are out-update. 
 The advantages of the Bootstrapping approach are that the relationship extraction system is cheap to build, 
 suitable for large-scale relationship extraction tasks, and can discover new relationships. 
 However, the sensitivity to initial seeds, the problem of semantic drift and the low accuracy of the 
 results have made the bootstrapping method fade out of the limelight.
 
 \subsection{Reaction extraction}
-There are some works about extracting reaction information from texts.
-% TODO
+Besides, there are some works about extracting reaction information from texts.
 Daniel Lowe download patent data from USPTO as an extraction source and use machine learning and rule-based 
-methods to extract reaction information into a representation containing atomic position information, 
+methods to extract reaction information into a representation containing atomic position information \cite{lowe2012extraction}, 
 but this approach has two shortcomings, one being that the patent data does not provide a good picture 
 of trends in the field of chemical synthesis, and the rule-based extraction of reactions results in 
 low accuracy and low recall information.
@@ -302,15 +307,15 @@ To solve these two problems Regina Barzelay's team at the MIT Computer Science a
 in 2021 that structured the reaction information into eight fields including product, reaction type, reactant, solvent, etc. With a 
 natural language processing approach, the reaction information extraction process was divided into two parts, the entity identification task
 with reaction products as a central element and the relation extraction task with eight associated reaction rules,
-implementing the conversion of bodies of texts into structured reaction information. For such work, it costs tens of students to label 9 fields of sentences 
+implementing the conversion of bodies of texts into structured reaction information\cite{guo2021automated}. For such work, it costs tens of students to label 9 fields of sentences 
 from articles, and spend more than 200 hours to label and check the accuracy of labeling work, which is time-consuming and labor-intensive.
 % This work focus on organic reaction extraction and a large corpus is needed for training an effective model.
 
 To reduce the burden of manual labeling, Weiren Wang proposed a natural language processing pipeline to capture both chemical composition and property data 
 from articles that allow analysis and prediction of superalloys. It uses a heuristic text multiple-relation extraction distance-based algorithm to get 
-properties without any labeled samples.
+properties without any labeled samples\cite{wang2022automated}.
 
-\subsection{Atom-Atom mapping}
+\subsection{Atom-to-Atom mapping}
 % What is AAM
 Reaction atom-to-atom mapping (AAM) is a procedure that establishes a correspondence between the atoms of 
 reactants and products. AAM allows the identification of reaction centers (RCs) that can be used for reaction template 
@@ -321,9 +326,9 @@ reactant-reagent role assignments, reaction rules extraction and knowledge extra
 To automate this process, several publicly and commercially available AAM tools are currently available. 
 A recent benchmarking study showed a mediocre performance of 
 various AAM algorithms, which are mostly expert systems. The best tested AAM is a data analytics/AI 
-approach called RxnMapper from IBM that assigns 1565 of 1851 reactions in the “Golden” data set correctly.
+approach called RxnMapper\cite{schwaller2020unsupervised} from IBM that assigns 1565 of 1851 reactions in the “Golden” data set correctly.
 After that, a new neural network is implemented inspired by representing compounds as a graph 
-instead of sequences and improved the attention-guided AAM algorithm. The new algorithm has improved 
+instead of sequences and improved the attention-guided AAM algorithm\cite{nugmanov2022bidirectional}. The new algorithm has improved 
 inference stability as it does not depend on the order of molecules in the reactant and product 
 sets as well as on the order of tokens in a SMILES/SELFIES string, which outperforms IBM RxnMapper, 
 which was the best freely available atom-to-atom mapper.
@@ -341,16 +346,17 @@ into reusing existing ontologies and building custom ontologies using build tool
 \end{figure}
 
 The development of chemical ontologies is in the beginning. There are very few ontologies to be found 
-for this specific field. ChEBI is a database of compounds published in 2007 that 
+for this specific field. ChEBI\cite{degtyarenko2007chebi} is a database of compounds published in 2007 that 
 describes small molecule compounds in biochemistry using standard bioinformatics terminology, providing compound names, structures, 
 descriptors and ontology information. Here is the ontological structure of cobalt in CHEBI and the relationship between a cobalt atom (\ref{ Fig.9 }), 
-a metal atom, and a metal atom. Due to its organic and inorganic content and clear structure, the ZOOMA tool (\ref{ Fig.10 }) provides the possibility 
+and a metal atom. Due to its organic and inorganic content and clear structure, the ZOOMA tool (\ref{ Fig.10 }) provides the possibility 
 of converting chemical names in the text into ontology corresponding categories to be used as the basic ontology of the catalytic 
 knowledge base about specific data. For categories that cannot be represented by the basic ontology, the semi-automated ontology 
-building tool Protege can be used to build the relevant concepts and relationships on its own, thus completing the construction of the 
+building tool Protege\cite{musen2015protege} can be used to build the relevant concepts and relationships on its own, thus completing the construction of the 
 schema layer.
+
 Name reactions serve a key purpose in chemistry as they provide a certain key-word for a given reaction, 
-its educts and products as well as data about the reaction environment. The RXNO is by far the most 
+its reactants and products as well as data about the reaction environment. The RXNO\cite{pachl2020overview} is by far the most 
 complete ontology about name reactions. It contains over 500 name reactions, sorted into an ontology with
 several layers. In the first instance, the reactions are sorted by the general type of the reaction, e.g.
 oxidations or cyclizations. The second layer is dividing the reactions further into smaller categories,
@@ -390,7 +396,7 @@ disease diagnosis and drug detection in biomedical applications, as well as in m
 aid material selection, while little has been achieved in chemistry. But recently, there are some works 
 about using a reaction knowledge graph to assist reversed-synthesis pathway analysis or predict reaction outcomes.
 
-Synthesis design is a formidable intellectual challenge that requires scientific intuition, experience and familiarity with
+Synthesis design\cite{dorwald2006side} is a formidable intellectual challenge that requires scientific intuition, experience and familiarity with
 a massive and rapidly growing body of knowledge and experimental data. For such a data- and knowledge-intensive
 paradigm, organic chemistry is notoriously deprived of computational tools that aim to assist chemists in the creative
 process of synthesis design. The synthetic route is a series of reactions that are started from the available molecules. The
@@ -403,14 +409,14 @@ which could achieve higher accuracy with the same search iteration.
 Multiple efforts have been made in the past 50 years to
 rationalize a large number of chemical compounds and
 reactions identified, which forms the large knowledge bases for
-solving synthetic problems. In 1969, Corey and Wipke1
+solving synthetic problems. In 1969, Corey and Wipke\cite{corey1969computer}
 demonstrated that both synthesis and retrosynthesis could be
 performed by a machine. Their pioneering contribution
 involved the use of handcrafted rules made by experts, which
 are commonly known as reaction templates. The templates
 encode the local changes to the atoms' connectivity under
 certain conditions accounting for various subtleties of retro-synthesis. 
-A similar algorithm emerged in the late 1970s2 which
+A similar algorithm emerged in the late 1970s\cite{salatin1980computer} which
 also requires a set of expert rules. Unfortunately, rules writing is
 a tedious task, both time and labor-intensive, and may not cover
 the entire domain for complex organic chemistry problems. In
@@ -425,9 +431,9 @@ especially if the problem is slightly outside the expert's
 knowledge. Other approaches extract reaction templates directly from
 data. In this specific context, candidate products are generated 
 from the templates and then ranked according to their
-likelihood. Satoh and Funatsu used various hard-coded
+likelihood. Satoh and Funatsu\cite{satoh1995sophia, satoh1996further} used various hard-coded
 the criterion to perform the ranking whereas more recent
-approaches5,6 used a deep neural network. However, these types
+approaches\cite{segler2017neural, struble2020current} used a deep neural network. However, these types
 of approaches are fundamentally dependent on the rule-based
 system component and thus inherits some of its major limitations. 
 In particular, these approaches do not produce sufficiently accurate 
@@ -438,21 +444,21 @@ The first-ever electrochemical reaction network is constructed from the first pr
 to describe the formation of the Li-ion solid electrolyte interphase (SEI), which is critical for the 
 passivation of the negative electrode. Optimized shortest path algorithms like Dijkstra's and Yen's 
 are allowed to be used to identify the best or N-best reaction paths to any given molecule node in
-any chemical reaction network for the first time. This network comprises nearly 6000 species and 4.5 million reactions.
+any chemical reaction network for the first time. This network comprises nearly 6000 species and 4.5 million reactions\cite{blau2021chemically}.
 % Parallel Optimization of Synthetic Pathways within the Network of Organic Chemistry
 While it is simply beyond the cognition of any individual human to understand and analyze all this
 collective chemical knowledge, modern computers have become powerful enough to perform suitable network
-analyses within reasonable timescales. Therefore, they first represent a reaction network with a bipartite graph
+analyses within reasonable timescales. Therefore, Kowalik first represent a reaction network with a bipartite graph
 and use a recursive algorithm that back-propagates on the network starting from a specified target molecule 
 to examine possible syntheses. Then, a cost calculation continues recursively, moving backward from a target until a critical 
 search depth is reached. This algorithm rapidly identifies the synthetic plan which minimizes the cost
-criterion.
+criterion\cite{kowalik2012parallel}.
 
 % Data-driven computer-aided synthesis design
 Reaction prediction is closely related to the problem of synthetic route prediction. 
 Leveraging reaction prediction capabilities toward full synthesis design poses various challenges. 
 Primarily it requires advanced strategic reasoning algorithms to mitigate the combinatorial explosion, 
-and it requires filtering out invalid suggestions to guarantee the chemical integrity of solutions.
+and it requires filtering out invalid suggestions to guarantee the chemical integrity of solutions\cite{ravitz2013data}.
 % prediction-of-compound-synthesis-accessibility-based-on-reaction-knowledge-graph
 With the increasing application of deep learning-based generative models for de novo
 molecule design, quantitative estimation of molecular synthetic accessibility becomes
@@ -464,25 +470,25 @@ was performed to identify the reaction paths of product compounds. This
 reaction dataset was then used to build a predictive model for distinguishing the organic 
 compounds either as easy synthesize (ES) or hard-to synthesize (HS) classes. Three 
 synthesis accessibility (SA) models were built using deep learning/machine learning 
-algorithms.
+algorithms\cite{li2022prediction}.
 % GNN-Retro: Retrosynthetic Planning with Graph Neural Networks
 To get a better performance in reaction prediction, a new framework is proposed, named GNN-Retro, for
 retrosynthetic planning problems by combining graph neural
 networks (GNN) and the latest search algorithm. 
 The structure of GNN in our framework could incorporate the information of neighboring molecules, 
-which will improve the estimation accuracy of our framework.
+which will improve the estimation accuracy of our framework\cite{han2022gnn}.
 % “Found in Translation”: predicting outcomes of complex organic chemistry reactions using neural sequence-to-sequence models
-In this work, they cast the reaction
+Schwaller cast the reaction
 prediction task as a translation problem by introducing a template-free sequence-to-sequence model,
 trained end-to-end and fully data-driven. A tokenization is proposed, which is arbitrarily extensible with
-reaction information.
+reaction information\cite{schwaller2018found}.
 
 
 \section{work foundation}
-To build the relay catalytic knowledge graph, the following preparations have been made.
+To build the catalytic knowledge graph, the following preparations have been made.
 
 \subsection{Schema design}
-Catalytic reaction information is structured as 30 fields containing reactants, products, catalysts, reaction conditions, etc(Fig \ref{ Fig.5 }). as follows:
+Catalytic reaction information is first structured as 30 fields containing reactants, products, catalysts, reaction conditions, etc(Fig \ref{ Fig.5 }). as follows:
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=0.7\textwidth]{figure/5.png}
@@ -503,22 +509,23 @@ To extract reactions from articles, we try to divide the extraction task into tw
 and reaction extraction from tables. To achieve reaction extraction from text, we first need to know if the current paragraph
 contains the target reaction information or not.
 % 训练词向量
-we try to use a total of 12303 articles to train word vectors preparing for text classification.
+We try to use a total of 12303 articles to train word vectors preparing for text classification.
 % 尝试段落分类
-Use trained word vector to get paragraph text vector and apply to SVM, Random Forest method to classify paragraph.
+Use trained word vector to get paragraph text vector and apply to SVM, Random Forest method to judge a paragraph has target properties or not.
 % 尝试规则提取化合物与属性
 If the current paragraph contains the target reaction information, then input it into the rule-based or NLP method to extract
-chemicals and properties.
+chemicals and associated properties.
 % 尝试表格提取化合物及属性
 Tables as semi-structured data can be easily extracted from articles. We use Beautifulsoup to extract tables in articles as lists,
 then use tailored algorithms to extract reaction information from these lists. 
-After extraction from text and tables, we can combine this information to make reaction information complete.
-
+There are several works about extracting reaction information from texts, pretraining model-based method and rule-based method can be 
+used for this task.
+After extraction from text and tables, we can combine this information to make reaction information complete. As reaction information is 
+scattered all around in articles, document-level information consolidation should be performed to align related reaction properties.
 \section{summary}
 We plan to automate the process of extracting information from documents to structured reactions(Fig \ref{ Fig.7 }), 
-converting the structured information into a knowledge graph through existing tools. It is hoped that such knowledge 
-mapping can be applied to scenarios such as synthesis path
-selection, reaction outcome prediction, reaction innovation, checking the correctness of reactions, and experimental condition screening.
+converting the structured information into a knowledge graph through existing tools or tailored algorithms. It is hoped that such knowledge 
+graph can be applied to scenarios such as synthesis path selection, reaction outcome prediction, reaction innovation, checking the correctness of reactions, and experimental condition screening.
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=0.7\textwidth]{figure/7.png}
@@ -526,10 +533,11 @@ selection, reaction outcome prediction, reaction innovation, checking the correc
  \label{ Fig.7 }
 \end{figure}
 The current research work has several challenges, based on the fragmentation of information, the need to do document-level information 
-integration, and the need to map referents to specific entities. Some attributes appear in sentences in the form of phrases that cannot 
+integration, and the need to map bodies of words to specific entities. Some attributes appear in sentences in the form of phrases that cannot 
 be simply extracted by rules and need to be combined with natural language processing methods for entity recognition and relationship 
-recognition. For existing specific response types, further extraction of hierarchical structures is needed when building ontologies to 
+recognition. For existing specific reaction types, further extraction of hierarchical structures is needed when building ontologies to 
 facilitate later knowledge graph searches, and this work needs to be done by domain experts, which is very time-consuming.
+
 As progress is being made in developing new and green chemical processes for a variety of
 industrial applications, an ever-growing amount of chemical information has been 
 published and stored in databases online. This includes both experimental and 
@@ -545,11 +553,15 @@ being developed using, for example, semantic web and network analysis.
 Semantic web technologies like knowledge graphs offer additional functionality to
 represent chemical knowledge. In conjunction with semantic web services, the information 
 available in chemical databases can be retrieved and changed and 
-allows the automation of model building.
+allows the automation of model building. Our analysis of reaction knowledge graph is still at the early 
+stage. We expect building a iterate-update reaction data extraction model on scientific literature could be 
+an interesting direction for quantitatively assessing reactions. With more reaction data
+and bigger reaction network, synthesis design and reaction outcome prediction could be 
+further improved.
 
 \begin{acknowledgments}
-We wish to acknowledge the support of the author community in using
-REV\TeX{}, offering suggestions and encouragement, testing new versions,
+We wish to acknowledge the support of the professor Jun Cheng, Slviya Wang and collegues in lab, 
+offering suggestions and encouragement.
 \dots.
 \end{acknowledgments}
 
