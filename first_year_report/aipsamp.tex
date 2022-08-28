@@ -30,18 +30,21 @@
              %  but any date may be explicitly specified
 
 \begin{abstract}
-Relay catalysis is an important method to synthesize main chemicals for material design. But the 
+Relay catalysis is an important method to synthesize main chemicals such as ethanol and formaldehyde. But the 
 the current implementation of relay catalysis remains in the traditional time-consuming 
-and labor-intensive paradigm. To facilitate this process, we try to build an automatic natural language 
-processing pipeline to extract reaction information from articles, constructing a reaction 
-database with a knowledge graph for relay catalysis to support specific-product synthesis pathway selection/design or other applications.
+and labor-intensive paradigm of reading extensive journal articles and searching reactions manually. 
+To facilitate this kind of process in catalytic chemistry, we try to build an automatic natural 
+language processing pipeline to extract reaction information from articles, constructing a reaction 
+database with a knowledge graph for relay catalysis to support specific-product 
+synthesis pathway selection/design, reaction outcome prediction or other applications.
 
-.
+
 %
 \end{abstract}
 
-\keywords{Knowledge graph, Relay catalysis, Reaction database, Specific-product synthesis pathway selection}%Use the show keys class option if the keyword
-                              %display desired
+\keywords{Knowledge graph, Relay catalysis, Reaction database, Specific-product synthesis pathway selection}
+%Use the show keys class option if the keyword
+%display desired
 \maketitle
 
 % \begin{quotation}
@@ -55,15 +58,13 @@ database with a knowledge graph for relay catalysis to support specific-product 
 
 
 \section{Introduction}
-
-
-\subsection{Relay catalysis}
+% \subsection{Relay catalysis}
 
 The traditional catalytic model refers to one catalyst catalyzing one reaction, 
 synthesizing the target product through a step-by-step synthesis in a linear fashion.
 However, modern organic synthesis advocates atomic economy and economy of steps.
 Relay catalysis can combine multiple catalysts to achieve a one-pot tandem reaction,
-which can dramatically reduce waste, solvents, time, labor, etc, and can be well controlled. 
+which can dramatically reduce waste, solvents, time, labor, etc, and can be well controlled\cite{wang2020recent}. 
 It is a perfect way to synthesize compounds we need and is more in line with green 
 chemistry guidelines and modern organic synthesis requirements. Therefore, 
 relay catalysis is an essential method for the fabrication of key chemicals
@@ -74,6 +75,9 @@ search for reactions based on experience and extensive literature reading. There
 we would like to have a reaction database that stores a large amount of reaction information, 
 which can support us in implementing functions such as synthesis path design/selection 
 and help us to find a high-selectivity and low-energy pathway to obtain the target product.
+Most existing works are about organic chemistry, biochemistry, or computational chemistry when combining 
+chemistry with artificial intelligence， But catalytic chemistry is lagging as an important subfield of 
+chemistry.
 
 
 \subsection{Reaction database}
@@ -280,37 +284,49 @@ results have made the bootstrapping method fade out of the limelight.
 
 \subsection{Reaction extraction}
 There are some works about extracting reaction information from texts.
-
+% TODO
 Daniel Lowe download patent data from USPTO as an extraction source and use machine learning and rule-based 
 methods to extract reaction information into a representation containing atomic position information, 
 but this approach has two shortcomings, one being that the patent data does not provide a good picture 
 of trends in the field of chemical synthesis, and the rule-based extraction of reactions results in 
 low accuracy and low recall information.
 
-To solve these two problems Regina Barzelay's team at the MIT Computer Science and Artificial Intelligence Laboratory published a work 
-in 2021 that structured the reaction information into eight fields including product, reaction type, reactant, solvent, etc. Using a 
-natural language processing approach, the reaction information extraction process was divided into two parts, entity identification tasks
-with reaction products as a central element and other elements that will be related to the product and do the relation extraction task.
-Implementing the conversion of a piece of text into a structured response message. For such work, it costs tens of students to label sentences
-from articles, spend more than 200 hours to label and check the accuracy of labeling work, which is time-consuming and labor-intensive.
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/8.png}
+ \caption{ Flowchart of reaction extraction from patents }
+ \label{ Fig.8 }
+\end{figure}
 
-Weiren Wang proposed a natural language processing pipeline to capture both chemical composition and property data from articles that allow analysis
-and prediction of superalloys. It uses a heuristic text multiple-relation extraction distance-based algorithm to get properties without any labeled samples.
-which can easily solve the above problem.
+To solve these two problems Regina Barzelay's team at the MIT Computer Science and Artificial Intelligence Laboratory published a work 
+in 2021 that structured the reaction information into eight fields including product, reaction type, reactant, solvent, etc. With a 
+natural language processing approach, the reaction information extraction process was divided into two parts, the entity identification task
+with reaction products as a central element and the relation extraction task with eight associated reaction rules,
+implementing the conversion of bodies of texts into structured reaction information. For such work, it costs tens of students to label 9 fields of sentences 
+from articles, and spend more than 200 hours to label and check the accuracy of labeling work, which is time-consuming and labor-intensive.
+% This work focus on organic reaction extraction and a large corpus is needed for training an effective model.
+
+To reduce the burden of manual labeling, Weiren Wang proposed a natural language processing pipeline to capture both chemical composition and property data 
+from articles that allow analysis and prediction of superalloys. It uses a heuristic text multiple-relation extraction distance-based algorithm to get 
+properties without any labeled samples.
 
 \subsection{Atom-Atom mapping}
-For applications like verifying the correctness of a reaction, template-based reaction prediction, 
-retrosynthesis planning methods, reactant-reagent role assignments, reaction rules extraction and knowledge
-extraction from reaction databases. To verify the correctness of a reaction refers to a reaction must have 
-at least one product and two reactants/solvents/catalysts,reactants and products do not have the same structures,
-for a correct reaction, all atoms of the product must come from the reactants and the number of atoms of the
-reactants and the number of atoms of the products should be the same in the calculation.After the information on 
-the reaction has been correctly extracted, in order to be able to achieve the above applications.It is necessary
-to know how atoms are converted during a reaction, a process we call atomic mapping.To automate this process, 
-IBM's European Research Institute Philip's team co-sourced the atomic mapping tool called RXNMapper 
-in 2021.Supports the conversion of Smiles representation into Smiles representation with 
-corresponding atomic positions, and atomic mapping for different types of reactions, 
-with a combined mapping accuracy of 99.4%.
+% What is AAM
+Reaction atom-to-atom mapping (AAM) is a procedure that establishes a correspondence between the atoms of 
+reactants and products. AAM allows the identification of reaction centers (RCs) that can be used for reaction template 
+extraction that serves multiple downstream tasks like automated forward/retrosynthesis planning, 
+reaction classification, reaction substructure and similarity searching, verifying the correctness of a reaction, template-based reaction prediction, 
+reactant-reagent role assignments, reaction rules extraction and knowledge extraction from reaction databases. 
+% 目前已有的AAM工具
+To automate this process, several publicly and commercially available AAM tools are currently available. 
+A recent benchmarking study showed a mediocre performance of 
+various AAM algorithms, which are mostly expert systems. The best tested AAM is a data analytics/AI 
+approach called RxnMapper from IBM that assigns 1565 of 1851 reactions in the “Golden” data set correctly.
+After that, a new neural network is implemented inspired by representing compounds as a graph 
+instead of sequences and improved the attention-guided AAM algorithm. The new algorithm has improved 
+inference stability as it does not depend on the order of molecules in the reactant and product 
+sets as well as on the order of tokens in a SMILES/SELFIES string, which outperforms IBM RxnMapper, 
+which was the best freely available atom-to-atom mapper.
 
 \subsection{Ontology construction}
 Ontologies are used to define concepts in a particular domain and the relationships between concepts. They serve two purposes: to constrain 
@@ -324,20 +340,149 @@ into reusing existing ontologies and building custom ontologies using build tool
  \label{ Fig.4 }
 \end{figure}
 
-ChEBI is a database of compounds published in 2007 by the Institute of Bioinformatics-Kirill team at the University of Cambridge that 
+The development of chemical ontologies is in the beginning. There are very few ontologies to be found 
+for this specific field. ChEBI is a database of compounds published in 2007 that 
 describes small molecule compounds in biochemistry using standard bioinformatics terminology, providing compound names, structures, 
-descriptors and ontology information.Here is the ontological structure of cobalt in CHEBI and the relationship between a cobalt atom, 
-a metal atom, and a metal atom.Due to its organic and inorganic content and clear structure, the ZOOMA tool provides the possibility 
+descriptors and ontology information. Here is the ontological structure of cobalt in CHEBI and the relationship between a cobalt atom (\ref{ Fig.9 }), 
+a metal atom, and a metal atom. Due to its organic and inorganic content and clear structure, the ZOOMA tool (\ref{ Fig.10 }) provides the possibility 
 of converting chemical names in the text into ontology corresponding categories to be used as the basic ontology of the catalytic 
-knowledge base in relation to specific data.For categories that cannot be represented by the basic ontology, the semi-automated ontology 
+knowledge base about specific data. For categories that cannot be represented by the basic ontology, the semi-automated ontology 
 building tool Protege can be used to build the relevant concepts and relationships on its own, thus completing the construction of the 
 schema layer.
+Name reactions serve a key purpose in chemistry as they provide a certain key-word for a given reaction, 
+its educts and products as well as data about the reaction environment. The RXNO is by far the most 
+complete ontology about name reactions. It contains over 500 name reactions, sorted into an ontology with
+several layers. In the first instance, the reactions are sorted by the general type of the reaction, e.g.
+oxidations or cyclizations. The second layer is dividing the reactions further into smaller categories,
+for example, their dedicated reactants. Again, using the example of oxidations, they are further divided
+into reactions describing the synthesis of alcohols or alkenes. Using this tree structure,
+a reaction can be obtained that is explicitly designed for a given goal. However, despite the enormous
+amount of reactions, sorted into this system, there is no further information given about these, aside
+from their name and parents. Also, certain chemicals, which are needed for the reaction, are assigned
+to the process and vice versa.
+
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/9.png}
+ \caption{ Ontology structure of Co }
+ \label{ Fig.9 }
+\end{figure}
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/10.png}
+ \caption{ An example of ZOOMA search }
+ \label{ Fig.10 }
+\end{figure}
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{figure/11.png}
+ \caption{ Exemplary branch of the RXNO (derived by [44])}
+ \label{ Fig.11 }
+\end{figure}
+
+\subsection{Applications of reaction network}
+Knowledge graphs have been widely used in recent years as data structures for easy storage of 
+heterogeneous data, easy pathway retrieval and inference capabilities to aid drug discovery, 
+disease diagnosis and drug detection in biomedical applications, as well as in materials design to 
+aid material selection, while little has been achieved in chemistry. But recently, there are some works 
+about using a reaction knowledge graph to assist reversed-synthesis pathway analysis or predict reaction outcomes.
+
+Synthesis design is a formidable intellectual challenge that requires scientific intuition, experience and familiarity with
+a massive and rapidly growing body of knowledge and experimental data. For such a data- and knowledge-intensive
+paradigm, organic chemistry is notoriously deprived of computational tools that aim to assist chemists in the creative
+process of synthesis design. The synthetic route is a series of reactions that are started from the available molecules. The
+most challenging problem in the generation of the synthetic
+route is the large search space of the candidate reactions. 
+Estimating the cost of candidate reactions has been proved effective to prune the search space, 
+which could achieve higher accuracy with the same search iteration.
+
+% “Found in Translation”: predicting outcomes of complex organic chemistry reactions using neural sequence-to-sequence models
+Multiple efforts have been made in the past 50 years to
+rationalize a large number of chemical compounds and
+reactions identified, which forms the large knowledge bases for
+solving synthetic problems. In 1969, Corey and Wipke1
+demonstrated that both synthesis and retrosynthesis could be
+performed by a machine. Their pioneering contribution
+involved the use of handcrafted rules made by experts, which
+are commonly known as reaction templates. The templates
+encode the local changes to the atoms' connectivity under
+certain conditions accounting for various subtleties of retro-synthesis. 
+A similar algorithm emerged in the late 1970s2 which
+also requires a set of expert rules. Unfortunately, rules writing is
+a tedious task, both time and labor-intensive, and may not cover
+the entire domain for complex organic chemistry problems. In
+such cases, profound chemical expertise is still required, and
+the solutions are usually developed by trained organic chemists.
+However, it can be extremely challenging even for them to 
+synthesize a relatively complex molecule, which may take
+several reaction steps to construct. In fact, navigating the
+chemical space of drug-related compounds by relying only on
+intuition may turn a synthesis into a nearly impossible task,
+especially if the problem is slightly outside the expert's
+knowledge. Other approaches extract reaction templates directly from
+data. In this specific context, candidate products are generated 
+from the templates and then ranked according to their
+likelihood. Satoh and Funatsu used various hard-coded
+the criterion to perform the ranking whereas more recent
+approaches5,6 used a deep neural network. However, these types
+of approaches are fundamentally dependent on the rule-based
+system component and thus inherits some of its major limitations. 
+In particular, these approaches do not produce sufficiently accurate 
+predictions outside of the training domain.
+
+% A chemically consistent graph architecture for massive reaction networks applied to solid electrolyte interphase formation
+The first-ever electrochemical reaction network is constructed from the first principles of thermodynamic calculations 
+to describe the formation of the Li-ion solid electrolyte interphase (SEI), which is critical for the 
+passivation of the negative electrode. Optimized shortest path algorithms like Dijkstra's and Yen's 
+are allowed to be used to identify the best or N-best reaction paths to any given molecule node in
+any chemical reaction network for the first time. This network comprises nearly 6000 species and 4.5 million reactions.
+% Parallel Optimization of Synthetic Pathways within the Network of Organic Chemistry
+While it is simply beyond the cognition of any individual human to understand and analyze all this
+collective chemical knowledge, modern computers have become powerful enough to perform suitable network
+analyses within reasonable timescales. Therefore, they first represent a reaction network with a bipartite graph
+and use a recursive algorithm that back-propagates on the network starting from a specified target molecule 
+to examine possible syntheses. Then, a cost calculation continues recursively, moving backward from a target until a critical 
+search depth is reached. This algorithm rapidly identifies the synthetic plan which minimizes the cost
+criterion.
+
+% Data-driven computer-aided synthesis design
+Reaction prediction is closely related to the problem of synthetic route prediction. 
+Leveraging reaction prediction capabilities toward full synthesis design poses various challenges. 
+Primarily it requires advanced strategic reasoning algorithms to mitigate the combinatorial explosion, 
+and it requires filtering out invalid suggestions to guarantee the chemical integrity of solutions.
+% prediction-of-compound-synthesis-accessibility-based-on-reaction-knowledge-graph
+With the increasing application of deep learning-based generative models for de novo
+molecule design, quantitative estimation of molecular synthetic accessibility becomes
+a crucial factor for prioritizing the structures generated from generative models. On the 
+other hand, it is also useful for helping prioritization of hit/lead compounds and guiding 
+retro-synthesis analysis. Based on the USPTO and Pistachio reaction datasets,
+Baiqing Li created a refined chemical reaction network, in which a depth-first search 
+was performed to identify the reaction paths of product compounds. This 
+reaction dataset was then used to build a predictive model for distinguishing the organic 
+compounds either as easy synthesize (ES) or hard-to synthesize (HS) classes. Three 
+synthesis accessibility (SA) models were built using deep learning/machine learning 
+algorithms.
+% GNN-Retro: Retrosynthetic Planning with Graph Neural Networks
+To get a better performance in reaction prediction, a new framework is proposed, named GNN-Retro, for
+retrosynthetic planning problems by combining graph neural
+networks (GNN) and the latest search algorithm. 
+The structure of GNN in our framework could incorporate the information of neighboring molecules, 
+which will improve the estimation accuracy of our framework.
+% “Found in Translation”: predicting outcomes of complex organic chemistry reactions using neural sequence-to-sequence models
+In this work, they cast the reaction
+prediction task as a translation problem by introducing a template-free sequence-to-sequence model,
+trained end-to-end and fully data-driven. A tokenization is proposed, which is arbitrarily extensible with
+reaction information.
+
 
 \section{work foundation}
-In order to build the Relay Catalytic Knowledge Map, the following preparations have been made.
+To build the relay catalytic knowledge graph, the following preparations have been made.
 
 \subsection{Schema design}
-A catalytic reaction message is expressed as 30 fields containing reactants, products, catalysts, reaction conditions, etc(Fig \ref{ Fig.5 }). as follows:
+Catalytic reaction information is structured as 30 fields containing reactants, products, catalysts, reaction conditions, etc(Fig \ref{ Fig.5 }). as follows:
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=0.7\textwidth]{figure/5.png}
@@ -352,27 +497,28 @@ A total of over 10,000 papers were then collected using these keywords from the 
  \caption{ Number of Articles per Journal in Our Corpus }
  \label{ Fig.6 }
 \end{figure}
+
 \subsection{Reaction extraction}
-To extract reactions from articles, we try to divide the extraction task into two parts, one is reaction extraction from text, 
-another is reaction extraction from tables.To achieve reaction extraction from text, we first need to know if current paragraph
+To extract reactions from articles, we try to divide the extraction task into two parts-reaction extraction from text, 
+and reaction extraction from tables. To achieve reaction extraction from text, we first need to know if the current paragraph
 contains the target reaction information or not.
 % 训练词向量
-we try to use the total 12303 articles to train word vector preparing for text classification.
+we try to use a total of 12303 articles to train word vectors preparing for text classification.
 % 尝试段落分类
 Use trained word vector to get paragraph text vector and apply to SVM, Random Forest method to classify paragraph.
 % 尝试规则提取化合物与属性
-If current paragraph contains the target reaction information, then input it into rule-based or NLP method to extract
+If the current paragraph contains the target reaction information, then input it into the rule-based or NLP method to extract
 chemicals and properties.
 % 尝试表格提取化合物及属性
-Tables as semi-structured data, can be easily extracted from articles.we use Beautifulsoup to extract tables in articles as lists,
+Tables as semi-structured data can be easily extracted from articles. We use Beautifulsoup to extract tables in articles as lists,
 then use tailored algorithms to extract reaction information from these lists. 
-After extraction from text and tables, we can combine these information to make reaction complete.
+After extraction from text and tables, we can combine this information to make reaction information complete.
 
 \section{summary}
 We plan to automate the process of extracting information from documents to structured reactions(Fig \ref{ Fig.7 }), 
 converting the structured information into a knowledge graph through existing tools. It is hoped that such knowledge 
 mapping can be applied to scenarios such as synthesis path
-selection, reaction result prediction, reaction innovation, checking the correctness of reactions, and experimental condition screening.
+selection, reaction outcome prediction, reaction innovation, checking the correctness of reactions, and experimental condition screening.
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=0.7\textwidth]{figure/7.png}
@@ -381,9 +527,25 @@ selection, reaction result prediction, reaction innovation, checking the correct
 \end{figure}
 The current research work has several challenges, based on the fragmentation of information, the need to do document-level information 
 integration, and the need to map referents to specific entities. Some attributes appear in sentences in the form of phrases that cannot 
-be simply extracted by rules, and need to be combined with natural language processing methods for entity recognition and relationship 
+be simply extracted by rules and need to be combined with natural language processing methods for entity recognition and relationship 
 recognition. For existing specific response types, further extraction of hierarchical structures is needed when building ontologies to 
 facilitate later knowledge graph searches, and this work needs to be done by domain experts, which is very time-consuming.
+As progress is being made in developing new and green chemical processes for a variety of
+industrial applications, an ever-growing amount of chemical information has been 
+published and stored in databases online. This includes both experimental and 
+computational chemical data. As a result, understanding how to store, access, 
+and manipulate this vast amount of information is now key to further scientific 
+progress. Increasingly, information science and mathematical methods such as data 
+mining and graph theory are being used to guide various fields in chemistry and chemical 
+engineering. Examples include analyzing organic reaction networks to understand and 
+plan new synthetic routes for green chemistry, and the use of process 
+informatics to develop predictive chemical kinetics for combustion chemistry. 
+In addition, various approaches to accessing and generating chemical knowledge are
+being developed using, for example, semantic web and network analysis.
+Semantic web technologies like knowledge graphs offer additional functionality to
+represent chemical knowledge. In conjunction with semantic web services, the information 
+available in chemical databases can be retrieved and changed and 
+allows the automation of model building.
 
 \begin{acknowledgments}
 We wish to acknowledge the support of the author community in using
