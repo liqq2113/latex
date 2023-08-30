@@ -38,9 +38,6 @@ To facilitate this kind of process in catalytic chemistry, we try to build an au
 language processing pipeline to extract reaction information from articles, constructing a reaction 
 database with a knowledge graph for relay catalysis to support specific-product 
 synthesis pathway selection/design, reaction outcome prediction or other applications.
-
-
-%
 \end{abstract}
 
 \keywords{Knowledge graph, Relay catalysis, Reaction database, Specific-product synthesis pathway selection}
@@ -167,7 +164,7 @@ to the construction of ontology\cite{eibeck2019j}.
 
 
 \section{Related work}
-We investigated four specific research directions of reaction extraction-entity recognition, relation extraction
+We investigated three specific research directions of reaction extraction-entity recognition, relation extraction
 and reaction extraction with these methods.
 
 \subsection{Entity recognition}
@@ -210,7 +207,7 @@ toolkit is present for the automated extraction of chemical entities and their a
 properties, measurements, and relationships from scientific documents that can be used
 to populate structure chemical databases\cite{swain2016chemdataextractor}. It uses unsupervised word clustering based on
 a massive corpus of chemistry  articles to achieve chemical named entity recognition with an 
-F-score of 93.4%.
+F-score of 93.4$\%$.
 
 \subsection{Relation extraction}
 Relation extraction is one of the most important sub-tasks of knowledge extraction for 
@@ -303,7 +300,7 @@ low accuracy and low recall information.
  \label{ Fig.8 }
 \end{figure}
 
-To solve these two problems Regina Barzelay's team at the MIT Computer Science and Artificial Intelligence Laboratory published a work 
+To solve these two problems, Regina Barzelay's team at the MIT Computer Science and Artificial Intelligence Laboratory published a work 
 in 2021 that structured the reaction information into eight fields including product, reaction type, reactant, solvent, etc. With a 
 natural language processing approach, the reaction information extraction process was divided into two parts, the entity identification task
 with reaction products as a central element and the relation extraction task with eight associated reaction rules,
@@ -315,7 +312,7 @@ To reduce the burden of manual labeling, Weiren Wang proposed a natural language
 from articles that allow analysis and prediction of superalloys. It uses a heuristic text multiple-relation extraction distance-based algorithm to get 
 properties without any labeled samples\cite{wang2022automated}.
 
-\subsection{Atom-to-Atom mapping}
+\subsubsection{Atom-to-Atom mapping}
 % What is AAM
 Reaction atom-to-atom mapping (AAM) is a procedure that establishes a correspondence between the atoms of 
 reactants and products. AAM allows the identification of reaction centers (RCs) that can be used for reaction template 
@@ -333,7 +330,7 @@ inference stability as it does not depend on the order of molecules in the react
 sets as well as on the order of tokens in a SMILES/SELFIES string, which outperforms IBM RxnMapper, 
 which was the best freely available atom-to-atom mapper.
 
-\subsection{Ontology construction}
+\subsubsection{Ontology construction}
 Ontologies are used to define concepts in a particular domain and the relationships between concepts. They serve two purposes: to constrain 
 the data and to facilitate knowledge graph queries.Since the various compounds in chemistry are more clearly defined and related to each other.
 Ontologies can be built in a top-down seven-step process(Fig \ref{ Fig.4 }), which is simply divided 
@@ -475,8 +472,8 @@ algorithms\cite{li2022prediction}.
 To get a better performance in reaction prediction, a new framework is proposed, named GNN-Retro, for
 retrosynthetic planning problems by combining graph neural
 networks (GNN) and the latest search algorithm. 
-The structure of GNN in our framework could incorporate the information of neighboring molecules, 
-which will improve the estimation accuracy of our framework\cite{han2022gnn}.
+The structure of GNN in this framework could incorporate the information of neighboring molecules, 
+which will improve the estimation accuracy of this framework\cite{han2022gnn}.
 % “Found in Translation”: predicting outcomes of complex organic chemistry reactions using neural sequence-to-sequence models
 Schwaller cast the reaction
 prediction task as a translation problem by introducing a template-free sequence-to-sequence model,
